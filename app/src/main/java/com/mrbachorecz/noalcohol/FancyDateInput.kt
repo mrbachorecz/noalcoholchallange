@@ -1,47 +1,48 @@
 package com.mrbachorecz.noalcohol
+
 import android.app.DatePickerDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
 
 @Composable
 fun FancyDateInput(
     selectedDate: String,
-    onDateSelected: (String) -> Unit
+    onDateSelected: (String?) -> Unit // Accept nullable for cancel
 ) {
     val context = LocalContext.current
-    var showDialog by remember { mutableStateOf(false) }
+    val calendar = Calendar.getInstance()
 
-    if (showDialog) {
-        val calendar = Calendar.getInstance()
-        DatePickerDialog(
-            context,
-            { _, year, month, dayOfMonth ->
-                val date = "%04d-%02d-%02d".format(year, month + 1, dayOfMonth)
-                onDateSelected(date)
-                showDialog = false
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+    if (selectedDate.isNotEmpty()) {
+        try {
+            val parts = selectedDate.split("-")
+            if (parts.size == 3) {
+                val year = parts[0].toInt()
+                val month = parts[1].toInt() - 1
+                val day = parts[2].toInt()
+                calendar.set(year, month, day)
+            }
+        } catch (_: Exception) { }
     }
 
-    Button(
-        onClick = { showDialog = true },
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-    ) {
-        Text(
-            if (selectedDate.isEmpty()) "Pick Initial Date" else "Date: $selectedDate",
-            style = MaterialTheme.typography.titleMedium
-        )
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, year, month, dayOfMonth ->
+            val date = "%04d-%02d-%02d".format(year, month + 1, dayOfMonth)
+            onDateSelected(date)
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    )
+    datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+
+    datePickerDialog.setOnCancelListener {
+        onDateSelected(null) // Signal cancel
+    }
+
+    LaunchedEffect(Unit) {
+        datePickerDialog.show()
     }
 }

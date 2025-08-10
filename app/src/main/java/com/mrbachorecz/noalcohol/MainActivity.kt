@@ -9,7 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.content.edit
-import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,25 +19,27 @@ class MainActivity : ComponentActivity() {
             var inputDate by remember { mutableStateOf("") }
 
 
-            MainCard(
-                storedDate = storedDate,
-                inputDate = inputDate,
-                onInputDateChange = { date ->
-                    inputDate = date
-                    try {
-                        LocalDate.parse(date, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE)
-                        prefs.edit { putString("start_date", date) }
-                        storedDate = date
-                    } catch (_: Exception) { /* handle invalid date */ }
-                },
-            )
-
             if (storedDate != null) {
+                MainCard(
+                    storedDate = storedDate!!,
+                )
+
                 ResetButton(
                     onReset = {
-                        prefs.edit { remove("start_date") }
+                        inputDate = storedDate!!
                         storedDate = null
-                        inputDate = ""
+                    }
+                )
+            } else {
+                FancyDateInput(
+                    selectedDate = inputDate,
+                    onDateSelected = { date ->
+                        if (date != null) {
+                            prefs.edit { putString("start_date", date) }
+                            storedDate = date
+                        } else {
+                            storedDate = inputDate // Restore previous date or handle as needed
+                        }
                     }
                 )
             }
