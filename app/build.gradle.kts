@@ -5,15 +5,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.noalcoholchallange"
+    namespace = "com.mrbachorecz.noalcohol"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.noalcoholchallange"
+        applicationId = "com.mrbachorecz.noalcohol"
         minSdk = 30
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

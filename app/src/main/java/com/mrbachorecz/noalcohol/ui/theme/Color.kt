@@ -1,4 +1,4 @@
-package com.example.noalcoholchallange.ui.theme
+package com.mrbachorecz.noalcohol.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

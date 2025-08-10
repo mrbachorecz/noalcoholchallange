@@ -1,4 +1,4 @@
-package com.example.noalcoholchallange
+package com.mrbachorecz.noalcohol
 
 import org.junit.Test
 

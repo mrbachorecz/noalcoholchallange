@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "No Alcohol Challange"
+rootProject.name = "No Alcohol"
 include(":app")
