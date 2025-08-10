@@ -34,12 +34,8 @@ class MainActivity : ComponentActivity() {
                 FancyDateInput(
                     selectedDate = inputDate,
                     onDateSelected = { date ->
-                        if (date != null) {
-                            prefs.edit { putString("start_date", date) }
-                            storedDate = date
-                        } else {
-                            storedDate = inputDate // Restore previous date or handle as needed
-                        }
+                        prefs.edit { putString("start_date", date) }
+                        storedDate = date
                     }
                 )
             }

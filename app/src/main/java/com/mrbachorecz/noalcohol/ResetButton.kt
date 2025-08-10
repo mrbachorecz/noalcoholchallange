@@ -2,6 +2,7 @@ package com.mrbachorecz.noalcohol
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -21,7 +22,8 @@ fun ResetButton(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 32.dp),
+            .padding(bottom = 32.dp)
+            .navigationBarsPadding(),
         contentAlignment = Alignment.BottomCenter
     ) {
         Button(
