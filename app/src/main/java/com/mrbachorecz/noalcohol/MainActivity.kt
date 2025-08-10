@@ -21,27 +21,27 @@ class MainActivity : ComponentActivity() {
 
 
             MainCard(
-                prefs = prefs,
                 storedDate = storedDate,
                 inputDate = inputDate,
-                onInputDateChange = { inputDate = it },
-                onSaveDate = { date ->
+                onInputDateChange = { date ->
+                    inputDate = date
                     try {
-                        // Validate date format
                         LocalDate.parse(date, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE)
                         prefs.edit { putString("start_date", date) }
                         storedDate = date
                     } catch (_: Exception) { /* handle invalid date */ }
-                }
+                },
             )
 
-            ResetButton(
-                onReset = {
-                    prefs.edit { remove("start_date") }
-                    storedDate = null
-                    inputDate = ""
-                }
-            )
+            if (storedDate != null) {
+                ResetButton(
+                    onReset = {
+                        prefs.edit { remove("start_date") }
+                        storedDate = null
+                        inputDate = ""
+                    }
+                )
+            }
         }
     }
 }

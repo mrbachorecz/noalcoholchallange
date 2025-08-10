@@ -13,7 +13,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,11 +28,9 @@ import java.time.temporal.ChronoUnit
 
 @Composable
 fun MainCard(
-    prefs: SharedPreferences,
     storedDate: String?,
     inputDate: String,
     onInputDateChange: (String) -> Unit,
-    onSaveDate: (String) -> Unit
 ) {
     val formatter = DateTimeFormatter.ISO_LOCAL_DATE
 
@@ -44,18 +41,10 @@ fun MainCard(
     ) {
         if (storedDate == null) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("Enter start date (YYYY-MM-DD):")
-                TextField(
-                    value = inputDate,
-                    onValueChange = onInputDateChange,
-                    modifier = Modifier.fillMaxWidth()
+                FancyDateInput(
+                    selectedDate = inputDate,
+                    onDateSelected = onInputDateChange
                 )
-                Button(
-                    onClick = { onSaveDate(inputDate) },
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Text("Save Date")
-                }
             }
         } else {
             val startDate = LocalDate.parse(storedDate, formatter)
