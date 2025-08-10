@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
+import kotlin.text.get
 
 @Composable
 fun FancyDateInput(
@@ -23,7 +24,8 @@ fun FancyDateInput(
                 val day = parts[2].toInt()
                 calendar.set(year, month, day)
             }
-        } catch (_: Exception) { }
+        } catch (_: Exception) {
+        }
     }
 
     val datePickerDialog = DatePickerDialog(
@@ -39,7 +41,7 @@ fun FancyDateInput(
     datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
 
     datePickerDialog.setOnCancelListener {
-        onDateSelected(selectedDate) // Signal cancel
+        onDateSelected("%04d-%02d-%02d".format(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)))
     }
 
     LaunchedEffect(Unit) {

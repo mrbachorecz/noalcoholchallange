@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NoAlcohol">
         <activity
-            android:name=".MainActivity"
+            android:name=".InitActivity"
             android:screenOrientation="portrait"
             android:exported="true"
             android:theme="@style/Theme.NoAlcohol"
@@ -23,6 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainCardActivity"/>
+        <activity android:name=".DatePickerActivity"/>
     </application>
 
 </manifest>
