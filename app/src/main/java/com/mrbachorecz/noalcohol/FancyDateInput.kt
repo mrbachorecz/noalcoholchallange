@@ -9,7 +9,7 @@ import java.util.Calendar
 @Composable
 fun FancyDateInput(
     selectedDate: String,
-    onDateSelected: (String) -> Unit // Accept nullable for cancel
+    onDateSelected: (String?) -> Unit
 ) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
@@ -40,7 +40,11 @@ fun FancyDateInput(
     datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
 
     datePickerDialog.setOnCancelListener {
-        onDateSelected("%04d-%02d-%02d".format(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)))
+        if (selectedDate.isEmpty()) {
+            onDateSelected(null)
+        } else {
+            onDateSelected(selectedDate)
+        }
     }
 
     LaunchedEffect(Unit) {

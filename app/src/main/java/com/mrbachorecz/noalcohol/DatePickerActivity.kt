@@ -12,15 +12,18 @@ class DatePickerActivity : ComponentActivity() {
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val storedDate = prefs.getString(STORED_DATE_KEY, "")
 
-        // This activity is used to show the date picker dialog
-        // It will be replaced by FancyDateInput in MainCardActivity
         setContent {
             FancyDateInput(
                 selectedDate = storedDate ?: "",
                 onDateSelected = { date ->
-                    prefs.edit().putString(STORED_DATE_KEY, date).apply()
-                    startActivity(Intent(this, MainCardActivity::class.java))
-                    finish() // Close this activity after selection
+                    if (date != null && date.isNotEmpty()) {
+                        prefs.edit().putString(STORED_DATE_KEY, date).apply()
+                        startActivity(Intent(this, MainCardActivity::class.java))
+                        finish()
+                    } else {
+                        startActivity(Intent(this, InitActivity::class.java))
+                        finish()
+                    }
                 }
             )
         }
