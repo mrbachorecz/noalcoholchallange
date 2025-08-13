@@ -27,8 +27,10 @@ fun FancyDateInput(
         }
     }
 
+    val themeId = android.R.style.ThemeOverlay_Material_Dialog
     val datePickerDialog = DatePickerDialog(
         context,
+        themeId,
         { _, year, month, dayOfMonth ->
             val date = "%04d-%02d-%02d".format(year, month + 1, dayOfMonth)
             onDateSelected(date)
