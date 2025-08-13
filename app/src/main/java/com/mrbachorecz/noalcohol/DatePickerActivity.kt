@@ -13,19 +13,21 @@ class DatePickerActivity : ComponentActivity() {
         val storedDate = prefs.getString(STORED_DATE_KEY, "")
 
         setContent {
-            FancyDateInput(
-                selectedDate = storedDate ?: "",
-                onDateSelected = { date ->
-                    if (date != null && date.isNotEmpty()) {
-                        prefs.edit().putString(STORED_DATE_KEY, date).apply()
-                        startActivity(Intent(this, MainCardActivity::class.java))
-                        finish()
-                    } else {
-                        startActivity(Intent(this, InitActivity::class.java))
-                        finish()
+            UITheme {
+                FancyDateInput(
+                    selectedDate = storedDate ?: "",
+                    onDateSelected = { date ->
+                        if (date != null && date.isNotEmpty()) {
+                            prefs.edit().putString(STORED_DATE_KEY, date).apply()
+                            startActivity(Intent(this, MainCardActivity::class.java))
+                            finish()
+                        } else {
+                            startActivity(Intent(this, InitActivity::class.java))
+                            finish()
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
