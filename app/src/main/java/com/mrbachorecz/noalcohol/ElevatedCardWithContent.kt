@@ -17,42 +17,43 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import androidx.compose.material3.ElevatedCard
 @Composable
 fun ElevatedCardWithContent(
     text: String,
 ) {
-    Card(
+    val colorStart = MaterialTheme.colorScheme.primary
+    val colorEnd = MaterialTheme.colorScheme.secondary
+
+    ElevatedCard(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
-        colors = CardDefaults.cardColors(
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.elevatedCardColors(
             containerColor = Color.Transparent,
-            contentColor = Color.White
-        )
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 12.dp)
     ) {
         Box(
             modifier = Modifier
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF90CAF9),
-                            Color(0xFF42A5F5)
-                        )
-                    )
+                        colors = listOf(colorStart, colorEnd)
+                    ),
+                    shape = MaterialTheme.shapes.large
                 )
                 .padding(24.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                text = text,
+                fontSize = 26.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.onPrimary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
