@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
-import kotlin.text.get
 
 @Composable
 fun FancyDateInput(

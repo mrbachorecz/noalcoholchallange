@@ -16,7 +16,7 @@ class DatePickerActivity : ComponentActivity() {
         // It will be replaced by FancyDateInput in MainCardActivity
         setContent {
             FancyDateInput(
-                selectedDate = storedDate ?:"",
+                selectedDate = storedDate ?: "",
                 onDateSelected = { date ->
                     prefs.edit().putString(STORED_DATE_KEY, date).apply()
                     startActivity(Intent(this, MainCardActivity::class.java))
