@@ -1,0 +1,40 @@
+name: Build Signed AAB
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Decode Keystore from secrets
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
+
+      - name: Build signed AAB
+        run: ./gradlew bundleRelease
+
+      - name: Rename AAB for upload
+        run: mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/noalcohol.1.0.2.aab
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: noalcohol.1.0.3.aab
+          path: app/build/outputs/bundle/release/noalcohol.1.0.3.aab
