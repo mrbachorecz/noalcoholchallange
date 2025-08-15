@@ -27,6 +27,9 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Build signed AAB
         run: ./gradlew bundleRelease
 
