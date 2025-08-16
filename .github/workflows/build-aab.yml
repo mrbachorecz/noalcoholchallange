@@ -46,10 +46,10 @@ jobs:
         run: echo "AAB_FILENAME=noalcohol-${GITHASH}-${VERSION_NAME}.aab" >> $GITHUB_ENV
 
       - name: Rename AAB for upload
-        run: mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/${AAB_FILENAME}
+        run: mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/${{ env.AAB_FILENAME }}
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${AAB_FILENAME}
-          path: app/build/outputs/bundle/release/${AAB_FILENAME}
+          path: app/build/outputs/bundle/release/${{ env.AAB_FILENAME }}
