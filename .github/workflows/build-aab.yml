@@ -30,6 +30,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: UT
+        run: ./gradlew testDebugUnitTest
+
       - name: Build signed AAB
         run: ./gradlew bundleRelease
 
