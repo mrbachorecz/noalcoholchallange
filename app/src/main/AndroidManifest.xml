@@ -13,7 +13,6 @@
         android:theme="@style/Theme.NoAlcohol">
         <activity
             android:name=".InitActivity"
-            android:screenOrientation="portrait"
             android:exported="true"
             android:theme="@style/Theme.NoAlcohol"
             android:fitsSystemWindows="true">
@@ -25,6 +24,7 @@
         </activity>
         <activity android:name=".MainCardActivity"/>
         <activity android:name=".DatePickerActivity"/>
+        <activity android:name=".SettingsActivity"/>
     </application>
 
 </manifest>

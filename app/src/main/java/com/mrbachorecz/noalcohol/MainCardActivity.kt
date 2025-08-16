@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
 
 class MainCardActivity : ComponentActivity() {
 
@@ -11,6 +12,7 @@ class MainCardActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UITheme {
+                val context = LocalContext.current
                 val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
                 val storedDate = prefs.getString(STORED_DATE_KEY, "")
 
@@ -21,7 +23,10 @@ class MainCardActivity : ComponentActivity() {
                             startActivity(Intent(this, DatePickerActivity::class.java))
                             finish()
                         },
-                        onSettingsClick = { /* TODO: Navigate to settings */ }
+                        onSettingsClick = {
+                            val intent = Intent(context, SettingsActivity::class.java)
+                            context.startActivity(intent)
+                        }
                     )
                 }
             }
