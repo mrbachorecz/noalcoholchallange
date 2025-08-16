@@ -51,5 +51,5 @@ jobs:
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${AAB_FILENAME}
+          name: ${{ env.AAB_FILENAME }}
           path: app/build/outputs/bundle/release/${{ env.AAB_FILENAME }}
