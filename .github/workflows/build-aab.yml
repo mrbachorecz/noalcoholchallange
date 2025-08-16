@@ -34,10 +34,10 @@ jobs:
         run: ./gradlew bundleRelease
 
       - name: Rename AAB for upload
-        run: mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/noalcohol.1.0.2.aab
+        run: mv app/release/app-release.aab app/release/noalcohol.1.0.3.aab
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
           name: noalcohol.1.0.3.aab
-          path: app/build/outputs/bundle/release/noalcohol.1.0.3.aab
+          path: app/release/noalcohol.1.0.3.aab
