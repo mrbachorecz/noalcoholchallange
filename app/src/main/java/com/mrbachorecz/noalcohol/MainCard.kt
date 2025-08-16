@@ -17,8 +17,6 @@ import java.time.temporal.ChronoUnit
 fun MainCard(
     storedDate: String,
 ) {
-    val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
@@ -28,11 +26,16 @@ fun MainCard(
                 .fillMaxSize()
                 .wrapContentSize(Alignment.Center)
         ) {
-            val startDate = LocalDate.parse(storedDate, formatter)
-            val daysPassed = ChronoUnit.DAYS.between(startDate, LocalDate.now())
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                ElevatedCardWithContent("No Alcohol: $daysPassed days")
+                ElevatedCardWithContent(calculateDaysPassed(storedDate))
             }
         }
     }
+}
+
+fun calculateDaysPassed(storedDate: String): String {
+    val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+    val startDate = LocalDate.parse(storedDate, formatter)
+    val daysPassed = ChronoUnit.DAYS.between(startDate, LocalDate.now())
+    return "No Alcohol: $daysPassed days"
 }

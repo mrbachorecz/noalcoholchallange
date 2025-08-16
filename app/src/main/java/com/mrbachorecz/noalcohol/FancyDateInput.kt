@@ -10,20 +10,17 @@ import androidx.compose.runtime.Composable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+val INPUT_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+val MILLIS_PER_DAY: Long = 24 * 60 * 60 * 1000
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FancyDateInput(
     selectedDate: String,
     onDateSelected: (String?) -> Unit
 ) {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val initialDate = try {
-        LocalDate.parse(selectedDate, formatter)
-    } catch (_: Exception) {
-        LocalDate.now()
-    }
-
-    val initialMillis = initialDate.toEpochDay() * 24 * 60 * 60 * 1000
+    val initialDate = parseDateOrToday(selectedDate)
+    val initialMillis = initialDate.toEpochDay() * MILLIS_PER_DAY
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillis)
 
     DatePickerDialog(
@@ -35,8 +32,8 @@ fun FancyDateInput(
             TextButton(onClick = {
                 val millis = datePickerState.selectedDateMillis
                 if (millis != null) {
-                    val pickedDate = LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
-                    onDateSelected(pickedDate.format(formatter))
+                    val pickedDate = LocalDate.ofEpochDay(millis / MILLIS_PER_DAY)
+                    onDateSelected(pickedDate.format(INPUT_DATE_FORMATTER))
                 } else {
                     onDateSelected(null)
                 }
@@ -56,3 +53,10 @@ fun FancyDateInput(
         DatePicker(state = datePickerState)
     }
 }
+
+fun parseDateOrToday(dateStr: String): LocalDate =
+    try {
+        LocalDate.parse(dateStr, INPUT_DATE_FORMATTER)
+    } catch (_: Exception) {
+        LocalDate.now()
+    }
