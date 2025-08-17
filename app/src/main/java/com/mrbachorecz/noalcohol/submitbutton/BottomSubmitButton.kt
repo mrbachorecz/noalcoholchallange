@@ -1,7 +1,7 @@
-package com.mrbachorecz.noalcohol
+package com.mrbachorecz.noalcohol.submitbutton
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -10,19 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ResetButton(
-    onReset: () -> Unit
+fun BottomSubmitButton(
+    text: String,
+    onSubmit: () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 32.dp)
+        Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
             .navigationBarsPadding(),
-        contentAlignment = Alignment.BottomCenter
+        contentAlignment = Alignment.Center
     ) {
-        SubmitButton(
-            text = "Reset",
-            onSubmit = onReset
-        )
+        SubmitButton(text = text, onSubmit = onSubmit)
     }
 }

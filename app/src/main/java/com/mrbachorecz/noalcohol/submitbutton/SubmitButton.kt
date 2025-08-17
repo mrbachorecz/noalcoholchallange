@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol
+package com.mrbachorecz.noalcohol.submitbutton
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults

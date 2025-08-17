@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
+import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 
 class MainCardActivity : ComponentActivity() {
 
@@ -13,10 +14,9 @@ class MainCardActivity : ComponentActivity() {
         setContent {
             UITheme {
                 val context = LocalContext.current
-                val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-                val storedDate = prefs.getString(STORED_DATE_KEY, "")
+                val storedDate = readLastDrinkingDate(context)
 
-                if (storedDate != null && storedDate.isNotEmpty()) {
+                if (storedDate.isNotEmpty()) {
                     MainCardScreen(
                         storedDate = storedDate,
                         onReset = {

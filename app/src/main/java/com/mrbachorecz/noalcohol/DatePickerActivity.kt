@@ -1,24 +1,25 @@
 package com.mrbachorecz.noalcohol
 
 import android.content.Intent
-import androidx.activity.ComponentActivity
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
+import com.mrbachorecz.noalcohol.storage.writeLastDrinkingDate
 
 class DatePickerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        val storedDate = prefs.getString(STORED_DATE_KEY, "")
+        val storedDate = readLastDrinkingDate(this)
 
         setContent {
             UITheme {
                 FancyDateInput(
-                    selectedDate = storedDate ?: "",
+                    selectedDate = storedDate,
                     onDateSelected = { date ->
                         if (date != null && date.isNotEmpty()) {
-                            prefs.edit().putString(STORED_DATE_KEY, date).apply()
+                            writeLastDrinkingDate(this, date)
                             startActivity(Intent(this, MainCardActivity::class.java))
                             finish()
                         } else {

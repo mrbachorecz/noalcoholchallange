@@ -2,7 +2,6 @@ package com.mrbachorecz.noalcohol
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -19,17 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-const val STORED_DATE_KEY = "storedDate"
+import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
+import com.mrbachorecz.noalcohol.submitbutton.SubmitButton
 
 class InitActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        val storedDate = prefs.getString(STORED_DATE_KEY, null)
+        val context = this
+        val storedDate = readLastDrinkingDate(context)
 
-        if (storedDate == null) {
+        if (storedDate.isEmpty()) {
             setContent {
                 UITheme {
                     Box(
