@@ -31,15 +31,18 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    storedAllowedNotification: Boolean,
+    storedNotificationHours: Int,
+    storedNotificationMinutes: Int,
     onClose: () -> Unit,
-    onSave: () -> Unit = {}
+    onSave: (Boolean, Int, Int) -> Unit
 ) {
-    val dividerColor = Color.Gray
-    val allowMorningNotification = remember { mutableStateOf(false) }
-
-    val selectedHour = remember { mutableIntStateOf(8) }
-    val selectedMinute = remember { mutableIntStateOf(0) }
+    val allowNotification = remember { mutableStateOf(storedAllowedNotification) }
+    val selectedHour = remember { mutableIntStateOf(storedNotificationHours) }
+    val selectedMinute = remember { mutableIntStateOf(storedNotificationMinutes) }
     val showTimePicker = remember { mutableStateOf(false) }
+
+    val dividerColor = Color.Gray
     val timePickerState = rememberTimePickerState(
         initialHour = selectedHour.intValue,
         initialMinute = selectedMinute.intValue,
@@ -48,10 +51,12 @@ fun SettingsScreen(
 
     Scaffold(
         topBar = { SubMenuTitleWithClose(title = "Settings", onClose = onClose) },
-        bottomBar = { BottomSubmitButton(text = "Save", onSubmit = {
-            onSave()
-            onClose()
-        }) },
+        bottomBar = {
+            BottomSubmitButton(text = "Save", onSubmit = {
+                onSave(allowNotification.value, selectedHour.intValue, selectedMinute.intValue)
+                onClose()
+            })
+        },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
@@ -76,8 +81,8 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Switch(
-                    checked = allowMorningNotification.value,
-                    onCheckedChange = { allowMorningNotification.value = it }
+                    checked = allowNotification.value,
+                    onCheckedChange = { allowNotification.value = it }
                 )
             }
             HorizontalDivider(
