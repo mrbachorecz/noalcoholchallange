@@ -1,5 +1,6 @@
 package com.mrbachorecz.noalcohol
 
+import com.mrbachorecz.noalcohol.DaysCalculator.calculateDaysPassed
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.LocalDate

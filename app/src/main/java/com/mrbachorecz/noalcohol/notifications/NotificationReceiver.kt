@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import com.mrbachorecz.noalcohol.DaysCalculator.calculateDaysPassed
+import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
@@ -21,9 +23,14 @@ class NotificationReceiver : BroadcastReceiver() {
         )
         notificationManager.createNotificationChannel(channel)
 
+        val storedDate = readLastDrinkingDate(context)
+        val daysPassed = calculateDaysPassed(storedDate)
+        val notificationText = "No alcohol: $daysPassed days"
+
+
         val notification = NotificationCompat.Builder(context, channelId)
-            .setContentTitle("Congratulation")
-            .setContentText("Congratulation")
+            .setContentTitle("Congratulation 🎉")
+            .setContentText(notificationText)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setAutoCancel(true)
             .build()
