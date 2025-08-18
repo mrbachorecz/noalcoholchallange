@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mrbachorecz.noalcohol.maincard.MainCardActivity
+import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils
 import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils.checkAndRequestNotificationPermission
 import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils.createRequestPermissionLauncher
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
@@ -31,9 +33,7 @@ class InitActivity : ComponentActivity() {
         val storedDate = readLastDrinkingDate(context)
 
         if (storedDate.isEmpty()) {
-            val requestPermissionLauncher = createRequestPermissionLauncher(this) { isGranted ->
-                // Handle permission result
-            }
+            val requestPermissionLauncher = createRequestPermissionLauncher(this) { isGranted -> }
             checkAndRequestNotificationPermission(this, requestPermissionLauncher)
             setContent {
                 UITheme {

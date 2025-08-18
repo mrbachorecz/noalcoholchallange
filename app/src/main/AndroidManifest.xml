@@ -23,9 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainCardActivity" />
+        <activity android:name=".maincard.MainCardActivity" />
         <activity android:name=".DatePickerActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".settings.SettingsActivity" />
 
         <receiver android:name=".notifications.NotificationReceiver" />
     </application>

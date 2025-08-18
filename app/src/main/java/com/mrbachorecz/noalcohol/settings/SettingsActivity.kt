@@ -1,12 +1,12 @@
-package com.mrbachorecz.noalcohol
+package com.mrbachorecz.noalcohol.settings
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.platform.LocalContext
+import com.mrbachorecz.noalcohol.UITheme
 import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils
-import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils.checkAndRequestNotificationPermission
 import com.mrbachorecz.noalcohol.notifications.NotificationScheduler
 import com.mrbachorecz.noalcohol.storage.readNotificationAllowed
 import com.mrbachorecz.noalcohol.storage.readNotificationHours
@@ -18,6 +18,8 @@ import com.mrbachorecz.noalcohol.storage.writeNotificationMinutes
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val requestPermissionLauncher =
+            NotificationPermissionUtils.createRequestPermissionLauncher(this) { isGranted -> }
         setContent {
             UITheme {
                 val context = LocalContext.current
@@ -26,13 +28,15 @@ class SettingsActivity : ComponentActivity() {
                         storedAllowedNotification = readNotificationAllowed(context),
                         storedNotificationHours = readNotificationHours(context),
                         storedNotificationMinutes = readNotificationMinutes(context),
-                        onClose = { (context as? ComponentActivity)?.finish() },
+                        onClose = {
+                            finish()
+                        },
                         onSave = { allowNotification, selectedHour, selectedMinute ->
                             writeNotificationAllowed(context, allowNotification)
                             writeNotificationHours(context, selectedHour)
                             writeNotificationMinutes(context, selectedMinute)
                             if (allowNotification) {
-                                checkAndRequestNotificationPermission(
+                                NotificationPermissionUtils.checkAndRequestNotificationPermission(
                                     this@SettingsActivity,
                                     requestPermissionLauncher
                                 )
@@ -48,12 +52,6 @@ class SettingsActivity : ComponentActivity() {
                     )
                 }
             }
-        }
-    }
-
-    private val requestPermissionLauncher by lazy {
-        NotificationPermissionUtils.createRequestPermissionLauncher(this) { isGranted ->
-            // Handle permission result
         }
     }
 }

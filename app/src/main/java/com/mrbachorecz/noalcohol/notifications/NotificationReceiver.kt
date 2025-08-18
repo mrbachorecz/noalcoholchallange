@@ -5,8 +5,10 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import com.mrbachorecz.noalcohol.DaysCalculator.calculateDaysPassed
+import com.mrbachorecz.noalcohol.R
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -25,13 +27,14 @@ class NotificationReceiver : BroadcastReceiver() {
 
         val storedDate = readLastDrinkingDate(context)
         val daysPassed = calculateDaysPassed(storedDate)
-        val notificationText = "No alcohol: $daysPassed days"
 
+        val largeIcon = BitmapFactory.decodeResource(context.resources, R.drawable.noalcoholchallange_large_notification_icon)
 
         val notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle("Congratulation 🎉")
-            .setContentText(notificationText)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentText(daysPassed)
+            .setSmallIcon(R.drawable.small_notification_icon)
+            .setLargeIcon(largeIcon)
             .setAutoCancel(true)
             .build()
 

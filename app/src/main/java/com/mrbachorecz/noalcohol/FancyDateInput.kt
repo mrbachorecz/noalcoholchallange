@@ -3,6 +3,7 @@ package com.mrbachorecz.noalcohol
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -11,7 +12,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 val INPUT_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-val MILLIS_PER_DAY: Long = 24 * 60 * 60 * 1000
+const val MILLIS_PER_DAY: Long = 24 * 60 * 60 * 1000
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,7 +22,16 @@ fun FancyDateInput(
 ) {
     val initialDate = parseDateOrToday(selectedDate)
     val initialMillis = initialDate.toEpochDay() * MILLIS_PER_DAY
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillis)
+    val todayMillis = LocalDate.now().toEpochDay() * MILLIS_PER_DAY
+    val noFutureDates = object : SelectableDates {
+        override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+            return utcTimeMillis <= todayMillis
+        }
+    }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialMillis,
+        selectableDates = noFutureDates
+    )
 
     DatePickerDialog(
         onDismissRequest = {

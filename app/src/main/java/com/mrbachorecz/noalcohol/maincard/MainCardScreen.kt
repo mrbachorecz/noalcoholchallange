@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol
+package com.mrbachorecz.noalcohol.maincard
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -28,10 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.DaysCalculator.calculateDaysPassed
+import com.mrbachorecz.noalcohol.ElevatedCardWithContent
 import com.mrbachorecz.noalcohol.submitbutton.BottomSubmitButton
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
