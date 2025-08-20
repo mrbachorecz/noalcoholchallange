@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol
+package com.mrbachorecz.noalcohol.maincard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

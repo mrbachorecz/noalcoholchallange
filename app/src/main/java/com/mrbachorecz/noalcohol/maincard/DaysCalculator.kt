@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol
+package com.mrbachorecz.noalcohol.maincard
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

@@ -27,8 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.mrbachorecz.noalcohol.DaysCalculator.calculateDaysPassed
-import com.mrbachorecz.noalcohol.ElevatedCardWithContent
+import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.submitbutton.BottomSubmitButton
 
 @OptIn(ExperimentalMaterial3Api::class)

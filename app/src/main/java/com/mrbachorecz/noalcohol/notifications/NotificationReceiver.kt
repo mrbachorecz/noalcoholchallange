@@ -6,7 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import com.mrbachorecz.noalcohol.DaysCalculator.calculateDaysPassed
+import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.R
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 

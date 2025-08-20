@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".maincard.MainCardActivity" />
-        <activity android:name=".DatePickerActivity" />
+        <activity android:name=".initialdate.DatePickerActivity" />
         <activity android:name=".settings.SettingsActivity" />
 
         <receiver android:name=".notifications.NotificationReceiver" />

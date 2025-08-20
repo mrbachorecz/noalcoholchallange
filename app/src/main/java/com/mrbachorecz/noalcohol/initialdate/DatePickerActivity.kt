@@ -1,9 +1,11 @@
-package com.mrbachorecz.noalcohol
+package com.mrbachorecz.noalcohol.initialdate
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.mrbachorecz.noalcohol.InitActivity
+import com.mrbachorecz.noalcohol.UITheme
 import com.mrbachorecz.noalcohol.maincard.MainCardActivity
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import com.mrbachorecz.noalcohol.storage.writeLastDrinkingDate

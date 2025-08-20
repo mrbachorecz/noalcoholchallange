@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol
+package com.mrbachorecz.noalcohol.initialdate
 
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
