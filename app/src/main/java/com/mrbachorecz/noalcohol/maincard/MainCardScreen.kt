@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -30,11 +31,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassedMessage
 import com.mrbachorecz.noalcohol.submitbutton.BottomSubmitButton
 
+
+val greetings = listOf(
+    //"Welcome Back",
+    //"Hello",
+    //"Hey",
+    //"Welcome Aboard",
+    //"Good to See You",
+    //"Glad You're Here",
+    "Welcome to Your Journey",
+    //"Welcome to No Alcohol",
+    //"Hi there",
+    //"Great to Have You",
+    //"You're Doing Amazing",
+    //"Stay Strong",
+    //"Proud of You",
+    //"Cheers to Progress",
+    //"Happy to See You",
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -129,16 +149,32 @@ fun MainCardScreen(
             },
             containerColor = Color.Transparent
         ) { innerPadding ->
+            val randomGreeting = remember { greetings.random() }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
+                    .padding(innerPadding)
             ) {
+                // Greeting overlaps TopAppBar a bit
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(y = (10).dp), // adjust value as needed
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Text(
+                        text = randomGreeting,
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+                // Main content centered
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     ElevatedCardWithContent(calculateDaysPassedMessage(storedDate))
                     Spacer(modifier = Modifier.padding(16.dp))
