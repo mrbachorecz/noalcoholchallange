@@ -8,26 +8,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val SmurfBlueLightColorScheme = lightColorScheme(
-    primary = Color(0xFF4FC3FF),
+    primary = Color(0xFF335889),
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFB3E5FF),
-    onPrimaryContainer = Color.Black,
-    secondary = Color(0xFF64B5F6),
-    onSecondary = Color.White,
-    secondaryContainer = Color(0xFFBBDEFB),
+    primaryContainer = Color(0xFF4A6FA0),
+    onPrimaryContainer = Color.White,
+    secondary = Color(0xFF4FC3FF),
+    onSecondary = Color.Black,
+    secondaryContainer = Color(0xFFB3E5FF),
     onSecondaryContainer = Color.Black
 )
 
 val SmurfBlueDarkColorScheme = darkColorScheme(
-    primary = Color(0xFF1565C0),
-    onPrimary = Color.Black,
-    primaryContainer = Color(0xFF1976D2),
-    onPrimaryContainer = Color.Black,
-    secondary = Color(0xFF1E88E5),
-    onSecondary = Color.Black,
-    secondaryContainer = Color(0xFF42A5F5),
-    onSecondaryContainer = Color.Black,
-    inversePrimary = Color(0xFFBBDEFB)
+    primary = Color(0xFF4A6FA0),
+    onPrimary = Color.White,
+    primaryContainer = Color(0xFF335889),
+    onPrimaryContainer = Color.White,
+    secondary = Color(0xFF1976D2),
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFF1565C0),
+    onSecondaryContainer = Color.White,
+    inversePrimary = Color(0xFFB3E5FF)
 )
 
 @Composable

@@ -11,7 +11,7 @@ object DaysCalculator {
         val startDate = LocalDate.parse(storedDate, formatter)
         val daysPassed = calculateDaysSinceThen(startDate)
         val unit = if (daysPassed == 1) "day" else "days"
-        return "No Alcohol: $daysPassed $unit"
+        return "$daysPassed"
     }
 
     fun calculateDaysPassed(storedDate: String): Int {
