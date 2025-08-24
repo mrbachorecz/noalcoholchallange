@@ -45,14 +45,10 @@ val greetings = listOf(
     "Welcome Aboard",
     "Good to See You",
     "Glad You're Here",
-    "Welcome to Your Journey",
-    "Welcome to No Alcohol",
     "Hi there",
     "Great to Have You",
-    "You're Doing Amazing",
     "Stay Strong",
     "Proud of You",
-    "Cheers to Progress",
     "Happy to See You",
 )
 
@@ -65,13 +61,24 @@ fun MainCardScreen(
     onSettingsClick: () -> Unit
 ) {
     val menuExpanded = remember { mutableStateOf(false) }
+    val randomGreeting = remember { greetings.random() }
     val randomQuote = remember { sobrietyQuotes.random() }
 
     if (storedDate.isNotEmpty()) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = {},
+                    title = {
+                        Text(
+                            text = randomGreeting,
+                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset(x = (-22).dp)
+                        )
+                    },
                     navigationIcon = {
                         Box {
                             IconButton(onClick = { menuExpanded.value = true }) {
@@ -149,28 +156,12 @@ fun MainCardScreen(
             },
             containerColor = Color.Transparent
         ) { innerPadding ->
-            val randomGreeting = remember { greetings.random() }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                // Greeting overlaps TopAppBar a bit
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = (10).dp), // adjust value as needed
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    Text(
-                        text = randomGreeting,
-                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                }
-                // Main content centered
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
