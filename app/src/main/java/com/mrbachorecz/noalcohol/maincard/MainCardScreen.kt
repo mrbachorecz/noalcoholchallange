@@ -35,23 +35,6 @@ import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassedMessage
 import com.mrbachorecz.noalcohol.submitbutton.BottomSubmitButton
 
-private val sobrietyQuotes = listOf(
-    "The first step towards getting somewhere is to decide you’re not going to stay where you are.",
-    "One day at a time.",
-    "Your best days are ahead of you.",
-    "Recovery is not for people who need it, it’s for people who want it.",
-    "It does not matter how slowly you go as long as you do not stop. — Confucius",
-    "Small steps every day.",
-    "You are stronger than you think.",
-    "Sobriety is a journey, not a destination.",
-    "Believe you can and you’re halfway there. — Theodore Roosevelt",
-    "Progress, not perfection.",
-    "Every day is a new beginning.",
-    "The only way out is through.",
-    "You don’t have to see the whole staircase, just take the first step. — Martin Luther King Jr.",
-    "Difficult roads often lead to beautiful destinations.",
-    "Stay patient and trust your journey."
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
