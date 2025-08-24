@@ -39,21 +39,21 @@ import com.mrbachorecz.noalcohol.submitbutton.BottomSubmitButton
 
 
 val greetings = listOf(
-    //"Welcome Back",
-    //"Hello",
-    //"Hey",
-    //"Welcome Aboard",
-    //"Good to See You",
-    //"Glad You're Here",
+    "Welcome Back",
+    "Hello",
+    "Hey",
+    "Welcome Aboard",
+    "Good to See You",
+    "Glad You're Here",
     "Welcome to Your Journey",
-    //"Welcome to No Alcohol",
-    //"Hi there",
-    //"Great to Have You",
-    //"You're Doing Amazing",
-    //"Stay Strong",
-    //"Proud of You",
-    //"Cheers to Progress",
-    //"Happy to See You",
+    "Welcome to No Alcohol",
+    "Hi there",
+    "Great to Have You",
+    "You're Doing Amazing",
+    "Stay Strong",
+    "Proud of You",
+    "Cheers to Progress",
+    "Happy to See You",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
