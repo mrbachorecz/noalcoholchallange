@@ -85,7 +85,7 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Allow morning notification",
+                    text = "Allow notification",
                     modifier = Modifier.weight(1f),
                     color = MaterialTheme.colorScheme.onBackground
                 )
