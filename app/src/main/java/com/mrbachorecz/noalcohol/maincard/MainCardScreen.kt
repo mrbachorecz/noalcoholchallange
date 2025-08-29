@@ -1,10 +1,8 @@
 package com.mrbachorecz.noalcohol.maincard
 
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -95,56 +93,68 @@ fun MainCardScreen(
             containerColor = Color.Transparent
         ) { innerPadding ->
             val offsetY = remember { mutableFloatStateOf(0f) }
-            val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-            val availableScreenHeight = LocalConfiguration.current.screenHeightDp.dp - topAppBarHeight
+            val availableScreenWidth = LocalConfiguration.current.screenWidthDp.dp - 50.dp
+            val availableScreenHeight =
+                LocalConfiguration.current.screenHeightDp.dp - topAppBarHeight
             val circleSize = (availableScreenHeight.value * 0.28f).roundToInt()
-            val cardTopOffset = ((availableScreenHeight.value * 0.5f - circleSize)/2).roundToInt()
+            val cardTopOffset = ((availableScreenHeight.value * 0.5f - circleSize) / 2).roundToInt()
 
             val threshold = circleSize
-            val dividerWidth = ((offsetY.floatValue / threshold).coerceIn(0f, 1f) * screenWidth.value).dp
+            val swipeMax = cardTopOffset + threshold + 1f
+            val dividerProgress = (offsetY.floatValue / swipeMax).coerceIn(0f, 1f)
+            val dividerWidth = (dividerProgress * availableScreenWidth.value).dp
 
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                    ElevatedCardWithContent(
-                        text = calculateDaysPassedMessage(storedDate),
-                        Modifier
-                            .size(circleSize.dp)
-                            .align(Alignment.TopCenter)
-                            .padding(all = 16.dp)
-                            .offset { IntOffset(x = 0, y = cardTopOffset + offsetY.floatValue.roundToInt()) }
-                            .pointerInput(Unit) {
-                                detectVerticalDragGestures(
-                                    onVerticalDrag = { change, dragAmount ->
-                                        change.consume()
-                                        val newOffset = offsetY.floatValue + dragAmount
-                                        offsetY.floatValue =
-                                            newOffset.coerceIn(
-                                                0f,
-                                                cardTopOffset + threshold + 1f
-                                            ) // 100f is your threshold
-                                    },
-                                    onDragEnd = {
-                                        if (offsetY.floatValue > cardTopOffset + threshold) { // Set a threshold for a full swipe
-                                            onReset()
-                                        }
-                                        // Reset the position
-                                        offsetY.floatValue = 0f
-                                    },
-                                )
-                            },
-                    )
+                ElevatedCardWithContent(
+                    text = calculateDaysPassedMessage(storedDate),
+                    Modifier
+                        .size(circleSize.dp)
+                        .align(Alignment.TopCenter)
+                        .padding(all = 16.dp)
+                        .offset {
+                            IntOffset(
+                                x = 0,
+                                y = cardTopOffset + offsetY.floatValue.roundToInt()
+                            )
+                        }
+                        .pointerInput(Unit) {
+                            detectVerticalDragGestures(
+                                onVerticalDrag = { change, dragAmount ->
+                                    change.consume()
+                                    val newOffset = offsetY.floatValue + dragAmount
+                                    offsetY.floatValue =
+                                        newOffset.coerceIn(
+                                            0f,
+                                            swipeMax
+                                        ) // 100f is your threshold
+                                },
+                                onDragEnd = {
+                                    if (offsetY.floatValue >= swipeMax) { // Set a threshold for a full swipe
+                                        onReset()
+                                    }
+                                    // Reset the position
+                                    offsetY.floatValue = 0f
+                                },
+                            )
+                        },
+                )
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize().offset(x = 0.dp, y = (cardTopOffset + threshold + 1f).dp + topAppBarHeight)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .offset(x = 0.dp, y = (cardTopOffset + threshold + 1f).dp + topAppBarHeight)
                 ) {
                     HorizontalDivider(
                         color = dividerColor,
                         thickness = 3.dp,
-                        modifier = Modifier.padding(horizontal = 8.dp).width(dividerWidth)
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .width(dividerWidth)
                     )
                     Text(
                         text = "“$randomQuote”",
