@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassedMessage
+import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import kotlin.math.roundToInt
 
 
@@ -109,8 +109,10 @@ fun MainCardScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
+                val daysPassed = calculateDaysPassed(storedDate)
                 ElevatedCardWithContent(
-                    text = calculateDaysPassedMessage(storedDate),
+                    text = "$daysPassed",
+                    unit = if (daysPassed == 1) "DAY" else "DAYS",
                     Modifier
                         .size(circleSize.dp)
                         .align(Alignment.TopCenter)

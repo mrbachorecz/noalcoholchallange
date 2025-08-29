@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ElevatedCardWithContent(
     text: String,
+    unit: String,
     modifier: Modifier
 ) {
     Card(
@@ -43,7 +44,7 @@ fun ElevatedCardWithContent(
                 color = Color.White
             )
             Text(
-                text = "DAYS",
+                text = unit,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Light,
                 color = Color.White
