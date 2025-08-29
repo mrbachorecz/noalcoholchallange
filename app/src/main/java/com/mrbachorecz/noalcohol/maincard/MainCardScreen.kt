@@ -3,29 +3,18 @@ package com.mrbachorecz.noalcohol.maincard
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MilitaryTech
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassedMessage
-import com.mrbachorecz.noalcohol.submitbutton.BottomSubmitButton
 
 
 val greetings = listOf(
@@ -80,7 +68,7 @@ fun MainCardScreen(
                         )
                     },
                     navigationIcon = {
-                        MainHamburgerMenu(onMedalsClick, onSettingsClick)
+                        MainHamburgerMenu(onMedalsClick, onSettingsClick, onReset)
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent
@@ -89,7 +77,7 @@ fun MainCardScreen(
                 )
             },
             bottomBar = {
-                BottomSubmitButton(text = "Reset", onSubmit = onReset)
+                //BottomSubmitButton(text = "Reset", onSubmit = onReset)
             },
             containerColor = Color.Transparent
         ) { innerPadding ->
