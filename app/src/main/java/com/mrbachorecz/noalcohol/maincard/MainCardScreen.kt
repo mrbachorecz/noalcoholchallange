@@ -60,7 +60,7 @@ fun MainCardScreen(
     onMedalsClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
-    val menuExpanded = remember { mutableStateOf(false) }
+
     val randomGreeting = remember { greetings.random() }
     val randomQuote = remember { sobrietyQuotes.random() }
 
@@ -80,70 +80,7 @@ fun MainCardScreen(
                         )
                     },
                     navigationIcon = {
-                        Box {
-                            IconButton(onClick = { menuExpanded.value = true }) {
-                                Icon(Icons.Filled.Menu, contentDescription = "Menu")
-                            }
-                            DropdownMenu(
-                                expanded = menuExpanded.value,
-                                onDismissRequest = { menuExpanded.value = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(vertical = 4.dp),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                                Icon(
-                                                    imageVector = Icons.Filled.MilitaryTech,
-                                                    contentDescription = "Medals",
-                                                    tint = MaterialTheme.colorScheme.onSurface
-                                                )
-                                                Spacer(modifier = Modifier.width(8.dp))
-                                                Text(
-                                                    text = "Medals",
-                                                    color = MaterialTheme.colorScheme.onSurface
-                                                )
-                                            }
-                                        }
-                                    },
-                                    onClick = {
-                                        menuExpanded.value = false
-                                        onMedalsClick()
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(vertical = 4.dp),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                                Icon(
-                                                    imageVector = Icons.Filled.Settings,
-                                                    contentDescription = "Settings",
-                                                    tint = MaterialTheme.colorScheme.onSurface
-                                                )
-                                                Spacer(modifier = Modifier.width(8.dp))
-                                                Text(
-                                                    text = "Settings",
-                                                    color = MaterialTheme.colorScheme.onSurface
-                                                )
-                                            }
-                                        }
-                                    },
-                                    onClick = {
-                                        menuExpanded.value = false
-                                        onSettingsClick()
-                                    }
-                                )
-                            }
-                        }
+                        MainHamburgerMenu(onMedalsClick, onSettingsClick)
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent
