@@ -92,7 +92,10 @@ fun MainCardScreen(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    ElevatedCardWithContent(calculateDaysPassedMessage(storedDate))
+                    ElevatedCardWithContent(
+                        text = calculateDaysPassedMessage(storedDate),
+                        onSwipeDown = onReset
+                    )
                     Spacer(modifier = Modifier.padding(16.dp))
                     Text(
                         text = "“$randomQuote”",
