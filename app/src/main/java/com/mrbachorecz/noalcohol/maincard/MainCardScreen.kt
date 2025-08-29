@@ -1,5 +1,6 @@
 package com.mrbachorecz.noalcohol.maincard
 
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,22 +9,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassedMessage
+import kotlin.math.roundToInt
 
 
 val greetings = listOf(
@@ -51,6 +60,8 @@ fun MainCardScreen(
 
     val randomGreeting = remember { greetings.random() }
     val randomQuote = remember { sobrietyQuotes.random() }
+
+    val dividerColor = Color.Gray
 
     if (storedDate.isNotEmpty()) {
         Scaffold(
@@ -81,6 +92,10 @@ fun MainCardScreen(
             },
             containerColor = Color.Transparent
         ) { innerPadding ->
+            val threshold = 100f
+            val offsetY = remember { mutableFloatStateOf(0f) }
+            val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+            val dividerWidth = ((offsetY.floatValue / threshold).coerceIn(0f, 1f) * screenWidth.value).dp
 
             Box(
                 modifier = Modifier
@@ -94,9 +109,37 @@ fun MainCardScreen(
                 ) {
                     ElevatedCardWithContent(
                         text = calculateDaysPassedMessage(storedDate),
-                        onSwipeDown = onReset
+                        Modifier
+                            .size(220.dp)
+                            .padding(16.dp)
+                            .offset { IntOffset(x = 0, y = offsetY.floatValue.roundToInt()) }
+                            .pointerInput(Unit) {
+                                detectVerticalDragGestures(
+                                    onVerticalDrag = { change, dragAmount ->
+                                        change.consume()
+                                        val newOffset = offsetY.floatValue + dragAmount
+                                        offsetY.floatValue =
+                                            newOffset.coerceIn(
+                                                0f,
+                                                threshold + 1f
+                                            ) // 100f is your threshold
+                                    },
+                                    onDragEnd = {
+                                        if (offsetY.floatValue > threshold) { // Set a threshold for a full swipe
+                                            onReset()
+                                        }
+                                        // Reset the position
+                                        offsetY.floatValue = 0f
+                                    },
+                                )
+                            },
                     )
                     Spacer(modifier = Modifier.padding(16.dp))
+                    HorizontalDivider(
+                        color = dividerColor,
+                        thickness = 3.dp,
+                        modifier = Modifier.padding(horizontal = 8.dp).width(dividerWidth)
+                    )
                     Text(
                         text = "“$randomQuote”",
                         style = MaterialTheme.typography.titleMedium,
