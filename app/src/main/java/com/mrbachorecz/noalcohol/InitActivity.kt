@@ -54,7 +54,7 @@ class InitActivity : ComponentActivity() {
                             )
                             Spacer(modifier = Modifier.height(24.dp))
                             SubmitButton(
-                                text = "Specify last drink date",
+                                text = "Start Now",
                                 onSubmit = {
                                     startActivity(
                                         Intent(

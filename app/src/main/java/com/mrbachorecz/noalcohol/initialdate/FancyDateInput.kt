@@ -1,13 +1,19 @@
 package com.mrbachorecz.noalcohol.initialdate
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -60,8 +66,17 @@ fun FancyDateInput(
             }
         }
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(state = datePickerState, title = {DatePickerTitle("Last drink date")})
     }
+}
+
+@Composable
+fun DatePickerTitle(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = Modifier.padding(PaddingValues(start = 24.dp, end = 12.dp, top = 16.dp))
+    )
 }
 
 fun parseDateOrToday(dateStr: String): LocalDate =
