@@ -49,6 +49,8 @@ val greetings = listOf(
     "Happy to See You",
 )
 
+val topAppBarHeight = 64.dp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainCardScreen(
@@ -92,9 +94,13 @@ fun MainCardScreen(
             },
             containerColor = Color.Transparent
         ) { innerPadding ->
-            val threshold = 100f
             val offsetY = remember { mutableFloatStateOf(0f) }
             val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+            val availableScreenHeight = LocalConfiguration.current.screenHeightDp.dp - topAppBarHeight
+            val circleSize = (availableScreenHeight.value * 0.28f).roundToInt()
+            val cardTopOffset = ((availableScreenHeight.value * 0.5f - circleSize)/2).roundToInt()
+
+            val threshold = circleSize
             val dividerWidth = ((offsetY.floatValue / threshold).coerceIn(0f, 1f) * screenWidth.value).dp
 
             Box(
@@ -102,17 +108,13 @@ fun MainCardScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
                     ElevatedCardWithContent(
                         text = calculateDaysPassedMessage(storedDate),
                         Modifier
-                            .size(220.dp)
-                            .padding(16.dp)
-                            .offset { IntOffset(x = 0, y = offsetY.floatValue.roundToInt()) }
+                            .size(circleSize.dp)
+                            .align(Alignment.TopCenter)
+                            .padding(all = 16.dp)
+                            .offset { IntOffset(x = 0, y = cardTopOffset + offsetY.floatValue.roundToInt()) }
                             .pointerInput(Unit) {
                                 detectVerticalDragGestures(
                                     onVerticalDrag = { change, dragAmount ->
@@ -121,11 +123,11 @@ fun MainCardScreen(
                                         offsetY.floatValue =
                                             newOffset.coerceIn(
                                                 0f,
-                                                threshold + 1f
+                                                cardTopOffset + threshold + 1f
                                             ) // 100f is your threshold
                                     },
                                     onDragEnd = {
-                                        if (offsetY.floatValue > threshold) { // Set a threshold for a full swipe
+                                        if (offsetY.floatValue > cardTopOffset + threshold) { // Set a threshold for a full swipe
                                             onReset()
                                         }
                                         // Reset the position
@@ -134,7 +136,11 @@ fun MainCardScreen(
                                 )
                             },
                     )
-                    Spacer(modifier = Modifier.padding(16.dp))
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize().offset(x = 0.dp, y = (cardTopOffset + threshold + 1f).dp + topAppBarHeight)
+                ) {
                     HorizontalDivider(
                         color = dividerColor,
                         thickness = 3.dp,
