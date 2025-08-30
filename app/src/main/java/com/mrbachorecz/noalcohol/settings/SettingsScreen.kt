@@ -34,7 +34,6 @@ fun SettingsScreen(
     val allowNotification = remember { mutableStateOf(storedAllowedNotification) }
     val selectedHour = remember { mutableIntStateOf(storedNotificationHours) }
     val selectedMinute = remember { mutableIntStateOf(storedNotificationMinutes) }
-    val showTimePicker = remember { mutableStateOf(false) }
     val currentThemeSetting = remember { mutableStateOf(storedThemeSetting) }
 
     val timePickerState = rememberTimePickerState(
@@ -78,12 +77,10 @@ fun SettingsScreen(
                 allowNotification = allowNotification.value,
                 onAllowNotificationChange = { allowNotification.value = it },
                 notificationTimePickerState = timePickerState,
-                onTimePickerClick = {
-                    if (allowNotification.value) {
-                        showTimePicker.value = true
-                    }
-                },
-                isTimeSettingEnabled = allowNotification.value
+                onTimeSelected = { hour, minute ->
+                    selectedHour.intValue = hour
+                    selectedMinute.intValue = minute
+                }
             )
 
             ThemeSettingsSection(
@@ -92,18 +89,6 @@ fun SettingsScreen(
                     currentThemeSetting.value = newSetting
                 }
             )
-
-            if (showTimePicker.value && allowNotification.value) { // Ensure dialog only shows if allowed
-                NotificationTimePickerDialog(
-                    timePickerState = timePickerState,
-                    onDismiss = { showTimePicker.value = false },
-                    onConfirm = {
-                        selectedHour.intValue = timePickerState.hour
-                        selectedMinute.intValue = timePickerState.minute
-                        showTimePicker.value = false
-                    }
-                )
-            }
         }
     }
 }

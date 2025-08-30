@@ -12,6 +12,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,10 +27,11 @@ fun NotificationSettingsSection(
     allowNotification: Boolean,
     onAllowNotificationChange: (Boolean) -> Unit,
     notificationTimePickerState: TimePickerState,
-    onTimePickerClick: () -> Unit,
-    isTimeSettingEnabled: Boolean
+    onTimeSelected: (hour: Int, minute: Int) -> Unit
 ) {
+    val showTimePicker = remember { mutableStateOf(false) }
     val dividerColor = Color.Gray
+
     Column {
         HorizontalDivider(
             color = dividerColor,
@@ -53,9 +56,9 @@ fun NotificationSettingsSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(enabled = isTimeSettingEnabled) { // Only clickable if enabled
-                    if (isTimeSettingEnabled) {
-                        onTimePickerClick()
+                .clickable(enabled = allowNotification) {
+                    if (allowNotification) {
+                        showTimePicker.value = true
                     }
                 }
                 .padding(vertical = 16.dp),
@@ -64,11 +67,21 @@ fun NotificationSettingsSection(
             Text(
                 text = "Notification time",
                 modifier = Modifier.weight(1f),
-                color = if (isTimeSettingEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                color = if (allowNotification) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
             )
             Text(
                 text = String.format(Locale.getDefault(), "%02d:%02d", notificationTimePickerState.hour, notificationTimePickerState.minute),
-                color = if (isTimeSettingEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                color = if (allowNotification) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            )
+        }
+        if (showTimePicker.value) {
+            NotificationTimePickerDialog(
+                timePickerState = notificationTimePickerState,
+                onDismiss = { showTimePicker.value = false },
+                onConfirm = {
+                    onTimeSelected(notificationTimePickerState.hour, notificationTimePickerState.minute)
+                    showTimePicker.value = false
+                }
             )
         }
     }
