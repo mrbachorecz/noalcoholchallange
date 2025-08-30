@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.SubMenuTitleWithClose
 import com.mrbachorecz.noalcohol.submitbutton.BottomSubmitButton
+import com.mrbachorecz.noalcohol.theme.ThemeManager
 import com.mrbachorecz.noalcohol.theme.ThemeSetting
 import java.util.Locale
 
@@ -167,6 +168,7 @@ fun SettingsScreen(
                                 currentThemeSetting.value = ThemeSetting.LIGHT
                             }
                         }
+                        ThemeManager.updateTheme(currentThemeSetting.value)
                     }
                 )
             }
@@ -196,7 +198,10 @@ fun SettingsScreen(
                 ThemeSettingOption(
                     text = "Light mode",
                     selected = currentThemeSetting.value == ThemeSetting.LIGHT,
-                    onClick = { currentThemeSetting.value = ThemeSetting.LIGHT }
+                    onClick = {
+                        currentThemeSetting.value = ThemeSetting.LIGHT
+                        ThemeManager.updateTheme(currentThemeSetting.value)
+                    }
                 )
             }
             Row(
@@ -208,7 +213,10 @@ fun SettingsScreen(
                 ThemeSettingOption(
                     text = "Dark mode",
                     selected = currentThemeSetting.value == ThemeSetting.DARK,
-                    onClick = { currentThemeSetting.value = ThemeSetting.DARK }
+                    onClick = {
+                        currentThemeSetting.value = ThemeSetting.DARK
+                        ThemeManager.updateTheme(currentThemeSetting.value)
+                    }
                 )
             }
             HorizontalDivider(

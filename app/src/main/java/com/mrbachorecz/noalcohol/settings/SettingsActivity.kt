@@ -16,6 +16,7 @@ import com.mrbachorecz.noalcohol.storage.writeNotificationAllowed
 import com.mrbachorecz.noalcohol.storage.writeNotificationHours
 import com.mrbachorecz.noalcohol.storage.writeNotificationMinutes
 import com.mrbachorecz.noalcohol.storage.writeThemeSetting
+import com.mrbachorecz.noalcohol.theme.ThemeManager
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

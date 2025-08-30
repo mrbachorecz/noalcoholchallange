@@ -5,9 +5,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import com.mrbachorecz.noalcohol.storage.readThemeSetting
 
 val SmurfBlueLightColorScheme = lightColorScheme(
     primary = Color(0xFF335889),
@@ -36,14 +36,15 @@ val SmurfBlueDarkColorScheme = darkColorScheme(
 fun UITheme(
     content: @Composable () -> Unit
 ) {
-    val themeSetting = readThemeSetting(LocalContext.current)
-    val colors = if (themeSetting == ThemeSetting.SYSTEM && isSystemInDarkTheme() || themeSetting == ThemeSetting.DARK) {
-        SmurfBlueDarkColorScheme
-    } else {
-        SmurfBlueLightColorScheme
+    val currentThemeSetting by ThemeManager.themeSetting.collectAsState()
+
+    val colorScheme = when (currentThemeSetting) {
+        ThemeSetting.LIGHT -> SmurfBlueLightColorScheme
+        ThemeSetting.DARK -> SmurfBlueDarkColorScheme
+        ThemeSetting.SYSTEM -> if (isSystemInDarkTheme()) SmurfBlueDarkColorScheme else SmurfBlueLightColorScheme
     }
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = colorScheme,
         content = content
     )
 }
