@@ -51,7 +51,10 @@ fun SettingsScreen(
             SubMenuTitleWithClose(
                 title = "Settings",
                 imageVector = Icons.Filled.Settings,
-                onClose = onClose
+                onClose = {
+                    ThemeManager.updateTheme(storedThemeSetting)
+                    onClose()
+                }
             )
         },
         bottomBar = {
