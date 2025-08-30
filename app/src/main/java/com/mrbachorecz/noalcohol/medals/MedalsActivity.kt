@@ -3,7 +3,7 @@ package com.mrbachorecz.noalcohol.medals
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.mrbachorecz.noalcohol.UITheme
+import com.mrbachorecz.noalcohol.theme.UITheme
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 

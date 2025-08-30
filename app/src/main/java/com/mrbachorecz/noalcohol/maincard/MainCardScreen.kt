@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -57,8 +56,6 @@ fun MainCardScreen(
     val randomGreeting = remember { greetings.random() }
     val randomQuote = remember { sobrietyQuotes.random() }
 
-    val dividerColor = Color.Gray
-
     if (storedDate.isNotEmpty()) {
         Scaffold(
             topBar = {
@@ -86,7 +83,7 @@ fun MainCardScreen(
             bottomBar = {
                 //BottomSubmitButton(text = "Reset", onSubmit = onReset)
             },
-            containerColor = Color.Transparent
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         ) { innerPadding ->
             val availableScreenHeight =
                 LocalConfiguration.current.screenHeightDp.dp - topAppBarHeight

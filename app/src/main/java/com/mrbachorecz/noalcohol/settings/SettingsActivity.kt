@@ -5,15 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.platform.LocalContext
-import com.mrbachorecz.noalcohol.UITheme
+import com.mrbachorecz.noalcohol.theme.UITheme
 import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils
 import com.mrbachorecz.noalcohol.notifications.NotificationScheduler
 import com.mrbachorecz.noalcohol.storage.readNotificationAllowed
 import com.mrbachorecz.noalcohol.storage.readNotificationHours
 import com.mrbachorecz.noalcohol.storage.readNotificationMinutes
+import com.mrbachorecz.noalcohol.storage.readThemeSetting
 import com.mrbachorecz.noalcohol.storage.writeNotificationAllowed
 import com.mrbachorecz.noalcohol.storage.writeNotificationHours
 import com.mrbachorecz.noalcohol.storage.writeNotificationMinutes
+import com.mrbachorecz.noalcohol.storage.writeThemeSetting
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,13 +30,15 @@ class SettingsActivity : ComponentActivity() {
                         storedAllowedNotification = readNotificationAllowed(context),
                         storedNotificationHours = readNotificationHours(context),
                         storedNotificationMinutes = readNotificationMinutes(context),
+                        storedThemeSetting = readThemeSetting(context),
                         onClose = {
                             finish()
                         },
-                        onSave = { allowNotification, selectedHour, selectedMinute ->
+                        onSave = { allowNotification, selectedHour, selectedMinute, selectedTheme ->
                             writeNotificationAllowed(context, allowNotification)
                             writeNotificationHours(context, selectedHour)
                             writeNotificationMinutes(context, selectedMinute)
+                            writeThemeSetting(context, selectedTheme)
                             if (allowNotification) {
                                 NotificationPermissionUtils.checkAndRequestNotificationPermission(
                                     this@SettingsActivity,

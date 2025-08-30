@@ -3,12 +3,14 @@ package com.mrbachorecz.noalcohol.storage
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.mrbachorecz.noalcohol.theme.ThemeSetting
 
 private const val PREFS_NAME = "app_prefs"
 private const val STORED_DATE_KEY = "storedDate"
 private const val NOTIFICATION_ALLOWED_KEY = "notificationAllowed"
 private const val NOTIFICATION_HOURS_KEY = "notificationHours"
 private const val NOTIFICATION_MINUTES_KEY = "notificationMinutes"
+private const val THEME_SETTING_KEY = "themeSetting"
 
 fun readLastDrinkingDate(context: Context): String {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -48,4 +50,19 @@ fun readNotificationMinutes(context: Context): Int {
 fun writeNotificationMinutes(context: Context, value: Int) {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     prefs.edit { putInt(NOTIFICATION_MINUTES_KEY, value) }
+}
+
+fun readThemeSetting(context: Context): ThemeSetting {
+    val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    val themeName = prefs.getString(THEME_SETTING_KEY, "SYSTEM") ?: "SYSTEM"
+    return try {
+        ThemeSetting.valueOf(themeName)
+    } catch (_: IllegalArgumentException) {
+        ThemeSetting.SYSTEM
+    }
+}
+
+fun writeThemeSetting(context: Context, value: ThemeSetting) {
+    val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    prefs.edit { putString(THEME_SETTING_KEY, value.name) }
 }

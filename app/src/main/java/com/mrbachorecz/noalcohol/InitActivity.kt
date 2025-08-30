@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mrbachorecz.noalcohol.initialdate.DatePickerActivity
 import com.mrbachorecz.noalcohol.maincard.MainCardActivity
-import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils
 import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils.checkAndRequestNotificationPermission
 import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils.createRequestPermissionLauncher
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import com.mrbachorecz.noalcohol.submitbutton.SubmitButton
+import com.mrbachorecz.noalcohol.theme.UITheme
 
 class InitActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

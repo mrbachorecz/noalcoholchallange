@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
-import com.mrbachorecz.noalcohol.UITheme
+import com.mrbachorecz.noalcohol.theme.UITheme
 import com.mrbachorecz.noalcohol.initialdate.DatePickerActivity
 import com.mrbachorecz.noalcohol.medals.MedalsActivity
 import com.mrbachorecz.noalcohol.settings.SettingsActivity
