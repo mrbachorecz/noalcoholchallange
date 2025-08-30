@@ -1,7 +1,9 @@
 package com.mrbachorecz.noalcohol.maincard
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,19 +13,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -32,11 +43,47 @@ fun ElevatedCardWithContent(
     text: String,
     unit: String,
     circleSize: Dp,
+    onLongPress: () -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+    var progress by remember { mutableStateOf(0f) }
+    val animatedProgress by animateFloatAsState(targetValue = progress, label = "ProgressAnimation")
+
+    // Duration for the long press to trigger the reset
+    val longPressDurationMillis = 650L // 0.65 seconds
+
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            val startTime = System.currentTimeMillis()
+            while (isPressed && (System.currentTimeMillis() - startTime) < longPressDurationMillis) {
+                progress = (System.currentTimeMillis() - startTime).toFloat() / longPressDurationMillis
+                delay(16) // Update roughly every frame
+            }
+            if (isPressed && (System.currentTimeMillis() - startTime) >= longPressDurationMillis) {
+                onLongPress()
+                progress = 0f // Reset progress after action
+            }
+            // If finger is lifted before duration, reset progress
+            if(!isPressed) {
+                progress = 0f
+            }
+        } else {
+            progress = 0f
+        }
+    }
     Card(
         modifier = Modifier
             .size(circleSize)
-            .padding(16.dp),
+            .padding(16.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        isPressed = true
+                        tryAwaitRelease() // Wait until the press is released
+                        isPressed = false
+                    },
+                )
+            },
         shape = CircleShape,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
@@ -71,6 +118,17 @@ fun ElevatedCardWithContent(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Light,
                     color = Color.White
+                )
+            }
+
+            if (isPressed && progress > 0f) {
+                CircularProgressIndicator(
+                    progress = { animatedProgress },
+                    modifier = Modifier.size(circleSize + 16.dp), // Make progress slightly larger than card
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant, // Or any other color for the background track
+                    strokeWidth = 4.dp,
+                    strokeCap = StrokeCap.Round
                 )
             }
         }

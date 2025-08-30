@@ -108,7 +108,8 @@ fun MainCardScreen(
                         ElevatedCardWithContent(
                             text = "$daysPassed",
                             unit = if (daysPassed == 1) "DAY" else "DAYS",
-                            circleSize = circleSize
+                            circleSize = circleSize,
+                            onLongPress = onReset // Pass the onReset lambda here
                         )
                     }
                     Row(modifier = Modifier.padding(top = 32.dp)) {
