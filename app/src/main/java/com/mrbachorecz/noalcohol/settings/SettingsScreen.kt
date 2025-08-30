@@ -59,6 +59,8 @@ fun SettingsScreen(
         is24Hour = true
     )
 
+    val forceThemeOptionsEnabled = currentThemeSetting.value != ThemeSetting.SYSTEM
+
     Scaffold(
         topBar = {
             SubMenuTitleWithClose(
@@ -162,11 +164,7 @@ fun SettingsScreen(
                         if (isChecked) {
                             currentThemeSetting.value = ThemeSetting.SYSTEM
                         } else {
-                            if (isSystemDark) {
-                                currentThemeSetting.value = ThemeSetting.DARK
-                            } else {
-                                currentThemeSetting.value = ThemeSetting.LIGHT
-                            }
+                            currentThemeSetting.value = if (isSystemDark) ThemeSetting.DARK else ThemeSetting.LIGHT
                         }
                         ThemeManager.updateTheme(currentThemeSetting.value)
                     }
@@ -186,18 +184,25 @@ fun SettingsScreen(
                 Text(
                     text = "Force theme",
                     modifier = Modifier.weight(1f),
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = if (forceThemeOptionsEnabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
             }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = 8.dp)
+                    .clickable(enabled = forceThemeOptionsEnabled) {
+                        if (forceThemeOptionsEnabled) {
+                            currentThemeSetting.value = ThemeSetting.LIGHT
+                            ThemeManager.updateTheme(currentThemeSetting.value)
+                        }
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ThemeSettingOption(
                     text = "Light mode",
                     selected = currentThemeSetting.value == ThemeSetting.LIGHT,
+                    enabled = forceThemeOptionsEnabled, // Pass enabled state
                     onClick = {
                         currentThemeSetting.value = ThemeSetting.LIGHT
                         ThemeManager.updateTheme(currentThemeSetting.value)
@@ -207,12 +212,20 @@ fun SettingsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 12.dp),
+                    .padding(horizontal = 8.dp, vertical = 12.dp)
+                    // Disable click if forceThemeOptions are not enabled
+                    .clickable(enabled = forceThemeOptionsEnabled) {
+                        if (forceThemeOptionsEnabled) {
+                            currentThemeSetting.value = ThemeSetting.DARK
+                            ThemeManager.updateTheme(currentThemeSetting.value)
+                        }
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ThemeSettingOption(
                     text = "Dark mode",
                     selected = currentThemeSetting.value == ThemeSetting.DARK,
+                    enabled = forceThemeOptionsEnabled, // Pass enabled state
                     onClick = {
                         currentThemeSetting.value = ThemeSetting.DARK
                         ThemeManager.updateTheme(currentThemeSetting.value)
@@ -255,19 +268,24 @@ fun SettingsScreen(
 fun ThemeSettingOption(
     text: String,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean = true // Add enabled parameter with a default value
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .clickable(enabled = enabled, onClick = onClick), // Use enabled parameter
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = selected,
-            onClick = onClick
+            onClick = onClick,
+            enabled = enabled // Use enabled parameter
         )
         Spacer(Modifier.width(8.dp))
-        Text(text = text, color = MaterialTheme.colorScheme.onBackground)
+        Text(
+            text = text,
+            color = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f) // Dim text when disabled
+        )
     }
 }
