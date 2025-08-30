@@ -53,48 +53,30 @@ fun ElevatedCardWithContent(
         ) {
             // Draw the custom curves using Canvas
             Canvas(modifier = Modifier.fillMaxSize()) {
+                val rotationDegrees = 15f // Adjust this value to rotate the arcs
                 val centerX = size.width / 2f
                 val centerY = size.height / 2f
                 val cardRadius = size.minDimension / 2f
 
                 // --- Top Arc Definition ---
-                val arcStartAngleDeg = 235f // (270 - 35)
-                val arcEndAngleDeg = 305f   // (270 + 35)
-                val arcSpanDeg = arcEndAngleDeg - arcStartAngleDeg
+                // Base angles (before rotation)
+                val baseArcStartAngleDeg = 235f
+                val baseArcEndAngleDeg = 305f
+
+                // Apply rotation
+                val arcStartAngleDeg = baseArcStartAngleDeg + rotationDegrees
+                val arcEndAngleDeg = baseArcEndAngleDeg + rotationDegrees
+
+                val arcSpanDeg = baseArcEndAngleDeg - baseArcStartAngleDeg // Span remains constant
 
                 val startX = cardRadius * cos(Math.toRadians(arcStartAngleDeg.toDouble())).toFloat() + centerX
                 val startY = cardRadius * sin(Math.toRadians(arcStartAngleDeg.toDouble())).toFloat() + centerY
                 val endX = cardRadius * cos(Math.toRadians(arcEndAngleDeg.toDouble())).toFloat() + centerX
                 val endY = cardRadius * sin(Math.toRadians(arcEndAngleDeg.toDouble())).toFloat() + centerY
 
-                // To make it look like an arc of a larger circle, we need to calculate
-                // control points that approximate this.
-                // A common formula for Bézier control points for a circular arc:
-                // For an arc of angle 'alpha' (in radians) and radius R_of_arc,
-                // the distance from endpoint to control point along tangent is k * R_of_arc
-                // where k = (4/3) * tan(alpha/4)
-
-                // We don't directly know R_of_arc or the true 'alpha' of the intersecting circle's segment.
-                // But we can influence the "roundness" by how we place control points
-                // relative to the chord (line between startX,startY and endX,endY).
-
-                // Let's simplify: the control points need to be on the "inside" of the chord.
-                // Their position determines the bulge.
-                // To make it look like a segment of ONE other circle, the control points
-                // should be somewhat symmetrical with respect to the perpendicular bisector of the chord.
-
-                // Midpoint of the angular span of OUR arc on the card
                 val midAngleDeg = (arcStartAngleDeg + arcEndAngleDeg) / 2f
-
-                // How much the control points deviate angularly from this midpoint.
-                // For a more "single arc" feel, this should be small.
-                val cpAngularDeviationFromMid = arcSpanDeg / 4f // e.g., quarter of the arc's own span
-
-                // Radial position of control points. This determines the depth of the "scoop".
-                // Must be < cardRadius for an inward curve.
-                // A value like 0.1 * cardRadius would mean very deep.
-                // A value like 0.7 * cardRadius would mean shallower.
-                val cpRadialPosition = cardRadius * 0.75f // Experiment with this! Lower = deeper.
+                val cpAngularDeviationFromMid = arcSpanDeg / 4f
+                val cpRadialPosition = cardRadius * 0.75f // Your preferred value
 
                 val c1AngleDeg = midAngleDeg - cpAngularDeviationFromMid
                 val c1X = cpRadialPosition * cos(Math.toRadians(c1AngleDeg.toDouble())).toFloat() + centerX
@@ -103,7 +85,6 @@ fun ElevatedCardWithContent(
                 val c2AngleDeg = midAngleDeg + cpAngularDeviationFromMid
                 val c2X = cpRadialPosition * cos(Math.toRadians(c2AngleDeg.toDouble())).toFloat() + centerX
                 val c2Y = cpRadialPosition * sin(Math.toRadians(c2AngleDeg.toDouble())).toFloat() + centerY
-
 
                 val pathTop = Path().apply {
                     moveTo(startX, startY)
@@ -116,8 +97,13 @@ fun ElevatedCardWithContent(
                 )
 
                 // --- Mirrored Bottom Arc ---
-                val mirrorArcStartAngleDeg = 360f - arcStartAngleDeg
-                val mirrorArcEndAngleDeg = 360f - arcEndAngleDeg
+                // Apply rotation to base mirrored angles
+                val baseMirrorArcStartAngleDeg = 360f - baseArcStartAngleDeg
+                val baseMirrorArcEndAngleDeg = 360f - baseArcEndAngleDeg
+
+                val mirrorArcStartAngleDeg = baseMirrorArcStartAngleDeg + 2 * rotationDegrees // Subtract for visual mirroring
+                val mirrorArcEndAngleDeg = baseMirrorArcEndAngleDeg + 2 * rotationDegrees     // Subtract for visual mirroring
+
 
                 val mirrorStartX = cardRadius * cos(Math.toRadians(mirrorArcStartAngleDeg.toDouble())).toFloat() + centerX
                 val mirrorStartY = cardRadius * sin(Math.toRadians(mirrorArcStartAngleDeg.toDouble())).toFloat() + centerY
@@ -125,16 +111,15 @@ fun ElevatedCardWithContent(
                 val mirrorEndY = cardRadius * sin(Math.toRadians(mirrorArcEndAngleDeg.toDouble())).toFloat() + centerY
 
                 val mirrorMidAngleDeg = (mirrorArcStartAngleDeg + mirrorArcEndAngleDeg) / 2f
-                // cpAngularDeviationFromMid remains the same
 
-                val mirrorC1AngleDeg = mirrorMidAngleDeg + cpAngularDeviationFromMid // Note swapped sign due to mirroring
+                // Control point deviation remains the same in magnitude
+                val mirrorC1AngleDeg = mirrorMidAngleDeg + cpAngularDeviationFromMid
+                val mirrorC2AngleDeg = mirrorMidAngleDeg - cpAngularDeviationFromMid
+
                 val mirrorC1X = cpRadialPosition * cos(Math.toRadians(mirrorC1AngleDeg.toDouble())).toFloat() + centerX
                 val mirrorC1Y = cpRadialPosition * sin(Math.toRadians(mirrorC1AngleDeg.toDouble())).toFloat() + centerY
-
-                val mirrorC2AngleDeg = mirrorMidAngleDeg - cpAngularDeviationFromMid // Note swapped sign
                 val mirrorC2X = cpRadialPosition * cos(Math.toRadians(mirrorC2AngleDeg.toDouble())).toFloat() + centerX
                 val mirrorC2Y = cpRadialPosition * sin(Math.toRadians(mirrorC2AngleDeg.toDouble())).toFloat() + centerY
-
 
                 val pathBottom = Path().apply {
                     moveTo(mirrorStartX, mirrorStartY)
