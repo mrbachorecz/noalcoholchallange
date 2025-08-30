@@ -43,7 +43,6 @@ fun SettingsScreen(
         is24Hour = true
     )
 
-    // Update theme when currentThemeSetting changes
     LaunchedEffect(currentThemeSetting.value) {
         ThemeManager.updateTheme(currentThemeSetting.value)
     }
@@ -60,8 +59,8 @@ fun SettingsScreen(
             BottomSubmitButton(text = "Save", onSubmit = {
                 onSave(
                     allowNotification.value,
-                    selectedHour.intValue, // Or use timePickerState.hour directly if always in sync
-                    selectedMinute.intValue, // Or use timePickerState.minute
+                    selectedHour.intValue,
+                    selectedMinute.intValue,
                     currentThemeSetting.value
                 )
                 onClose()
@@ -79,18 +78,22 @@ fun SettingsScreen(
                 allowNotification = allowNotification.value,
                 onAllowNotificationChange = { allowNotification.value = it },
                 notificationTimePickerState = timePickerState,
-                onTimePickerClick = { showTimePicker.value = true }
+                onTimePickerClick = {
+                    if (allowNotification.value) {
+                        showTimePicker.value = true
+                    }
+                },
+                isTimeSettingEnabled = allowNotification.value
             )
 
             ThemeSettingsSection(
                 currentThemeSetting = currentThemeSetting.value,
                 onThemeSettingChange = { newSetting ->
                     currentThemeSetting.value = newSetting
-                    // ThemeManager.updateTheme is now handled by LaunchedEffect
                 }
             )
 
-            if (showTimePicker.value) {
+            if (showTimePicker.value && allowNotification.value) { // Ensure dialog only shows if allowed
                 NotificationTimePickerDialog(
                     timePickerState = timePickerState,
                     onDismiss = { showTimePicker.value = false },

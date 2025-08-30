@@ -26,26 +26,21 @@ fun NotificationSettingsSection(
     onAllowNotificationChange: (Boolean) -> Unit,
     notificationTimePickerState: TimePickerState,
     onTimePickerClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    dividerColor: Color = Color.Gray
+    isTimeSettingEnabled: Boolean
 ) {
-    Column(modifier = modifier) {
+    val dividerColor = Color.Gray
+    Column {
         HorizontalDivider(
             color = dividerColor,
             thickness = 3.dp,
-            modifier = Modifier.padding(horizontal = 8.dp)
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 12.dp),
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Allow notification",
-                modifier = Modifier.weight(1f),
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            Text("Allow notifications", modifier = Modifier.weight(1f))
             Switch(
                 checked = allowNotification,
                 onCheckedChange = onAllowNotificationChange
@@ -58,23 +53,22 @@ fun NotificationSettingsSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 12.dp)
-                .clickable { onTimePickerClick() },
+                .clickable(enabled = isTimeSettingEnabled) { // Only clickable if enabled
+                    if (isTimeSettingEnabled) {
+                        onTimePickerClick()
+                    }
+                }
+                .padding(vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Notification time",
                 modifier = Modifier.weight(1f),
-                color = MaterialTheme.colorScheme.onBackground
+                color = if (isTimeSettingEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
             )
             Text(
-                text = String.format(
-                    Locale.getDefault(),
-                    "%02d:%02d",
-                    notificationTimePickerState.hour,
-                    notificationTimePickerState.minute
-                ),
-                color = MaterialTheme.colorScheme.primary
+                text = String.format(Locale.getDefault(), "%02d:%02d", notificationTimePickerState.hour, notificationTimePickerState.minute),
+                color = if (isTimeSettingEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
             )
         }
     }
