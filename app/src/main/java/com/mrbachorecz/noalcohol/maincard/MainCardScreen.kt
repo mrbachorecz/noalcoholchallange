@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mrbachorecz.noalcohol.healthimpact.HEALTH_IMPACTS
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.medals.MEDALS
 import com.mrbachorecz.noalcohol.medals.MedalIcon
@@ -184,11 +185,17 @@ fun MainCardScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text("Health impact", style = MaterialTheme.typography.titleMedium)
-                                Text(
-                                    "Content for the right card.",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                                // Add more content as needed
+                                if (numberOfDays > 0) {
+                                    val sortedImpacts = HEALTH_IMPACTS.toList().sortedBy { (days, _) -> days }
+                                    val currentImpact =
+                                        sortedImpacts.lastOrNull { numberOfDays >= it.first }?.second!!
+                                    Text("After ${currentImpact.title}", style = MaterialTheme.typography.titleMedium)
+                                    for (impact in currentImpact.impacts) {
+                                        Text("- $impact", style = MaterialTheme.typography.bodyMedium)
+                                    }
+                                } else {
+                                    Text("Welcome at Start, wait at least 24 hours")
+                                }
                             }
                         }
                     }
