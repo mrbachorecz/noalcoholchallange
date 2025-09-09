@@ -14,12 +14,12 @@ class DatePickerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val storedDate = readLastDrinkingDate(this)
+        //val storedDate = readLastDrinkingDate(this)
 
         setContent {
             UITheme {
                 FancyDateInput(
-                    selectedDate = storedDate,
+                    selectedDate = "",
                     onDateSelected = { date ->
                         if (date != null && date.isNotEmpty()) {
                             writeLastDrinkingDate(this, date)
