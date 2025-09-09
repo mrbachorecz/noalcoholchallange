@@ -101,7 +101,7 @@ fun BestMedalsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Best Medal",
+                        text = "Best Medal Ever",
                         style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                         textAlign = TextAlign.Center,
                         modifier = Modifier

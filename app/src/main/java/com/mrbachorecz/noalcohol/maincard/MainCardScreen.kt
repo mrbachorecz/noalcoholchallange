@@ -153,7 +153,7 @@ fun MainCardScreen(
                                     .fillMaxWidth(), // Add padding inside the card
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text("Best Medal", style = MaterialTheme.typography.titleMedium)
+                                Text("Best Medal Ever", style = MaterialTheme.typography.titleMedium)
                                 val currentMaxMedal =
                                     if (maxMedal > numberOfDays) maxMedal else numberOfDays
                                 val sortedMedals = MEDALS.toList().sortedBy { (days, _) -> days }
