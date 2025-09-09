@@ -11,6 +11,7 @@ private const val NOTIFICATION_ALLOWED_KEY = "notificationAllowed"
 private const val NOTIFICATION_HOURS_KEY = "notificationHours"
 private const val NOTIFICATION_MINUTES_KEY = "notificationMinutes"
 private const val THEME_SETTING_KEY = "themeSetting"
+private const val BEST_MEDAL_EVER_KEY = "bestMedalEver"
 
 fun readLastDrinkingDate(context: Context): String {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -65,4 +66,14 @@ fun readThemeSetting(context: Context): ThemeSetting {
 fun writeThemeSetting(context: Context, value: ThemeSetting) {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     prefs.edit { putString(THEME_SETTING_KEY, value.name) }
+}
+
+fun readBestMedalEver(context: Context): Int {
+    val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    return prefs.getInt(BEST_MEDAL_EVER_KEY, 0)
+}
+
+fun writeBestMedalEver(context: Context, value: Int) {
+    val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    prefs.edit { putInt(BEST_MEDAL_EVER_KEY, value) }
 }

@@ -1,5 +1,6 @@
 package com.mrbachorecz.noalcohol.maincard
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,6 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
+import com.mrbachorecz.noalcohol.medals.MEDALS
+import com.mrbachorecz.noalcohol.medals.MedalIcon
 import kotlin.math.roundToInt
 
 
@@ -48,9 +53,11 @@ val topAppBarHeight = 64.dp
 @Composable
 fun MainCardScreen(
     storedDate: String,
+    maxMedal: Int,
     onReset: () -> Unit,
     onMedalsClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onBestMedalsClick: () -> Unit,
 ) {
 
     val randomGreeting = remember { greetings.random() }
@@ -119,6 +126,71 @@ fun MainCardScreen(
                                 .alpha(0.7f),
                             textAlign = TextAlign.Center
                         )
+                    }
+                    // Add the two rectangular cards here
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                top = 32.dp,
+                                start = 16.dp,
+                                end = 16.dp
+                            ), // Add padding as needed
+                        horizontalArrangement = Arrangement.SpaceAround // This will place cards with space around them
+                    ) {
+                        // Left Card
+                        val numberOfDays = calculateDaysPassed(storedDate)
+                        Card(
+                            modifier = Modifier
+                                .weight(1f) // Each card takes equal space
+                                .padding(end = 8.dp)
+                                .clickable { onBestMedalsClick() },
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Optional: Add elevation
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth(), // Add padding inside the card
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text("Best Medal", style = MaterialTheme.typography.titleMedium)
+                                val currentMaxMedal =
+                                    if (maxMedal > numberOfDays) maxMedal else numberOfDays
+                                val sortedMedals = MEDALS.toList().sortedBy { (days, _) -> days }
+                                val currentMedal =
+                                    sortedMedals.lastOrNull { currentMaxMedal >= it.first }?.second
+                                if (currentMedal != null) {
+                                    MedalIcon(currentMedal)
+                                    Text(
+                                        currentMedal.message,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                } else {
+                                    Text("Welcome at Start")
+                                }
+                                // Add more content as needed
+                            }
+                        }
+
+                        // Right Card
+                        Card(
+                            modifier = Modifier
+                                .weight(1f) // Each card takes equal space
+                                .padding(start = 8.dp), // Add padding between cards
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Optional: Add elevation
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp), // Add padding inside the card
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text("Health impact", style = MaterialTheme.typography.titleMedium)
+                                Text(
+                                    "Content for the right card.",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                                // Add more content as needed
+                            }
+                        }
                     }
                 }
             }

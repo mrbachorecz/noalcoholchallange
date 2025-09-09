@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.theme.ThemeManager
 import hexagonShape
@@ -39,8 +40,7 @@ data class MedalInfo(
 )
 
 @Composable
-fun MedalIcon(medal: MedalInfo) {
-    val iconSize = 32.dp
+fun MedalIcon(medal: MedalInfo, iconSize: Dp = 32.dp) {
     val backgroundCircleSize = iconSize + 16.dp
     val needsGrayBackground =
         ThemeManager.isLightTheme() || ThemeManager.isSystemTheme() && !isSystemInDarkTheme()
@@ -58,8 +58,8 @@ fun MedalIcon(medal: MedalInfo) {
             contentDescription = medal.message,
             tint = medal.color,
             modifier = Modifier
-                .width(32.dp)
-                .height(32.dp)
+                .width(iconSize)
+                .height(iconSize)
         )
     }
 }

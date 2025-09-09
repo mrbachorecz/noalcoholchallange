@@ -28,6 +28,7 @@
         <activity android:name=".initialdate.DatePickerActivity" />
         <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".medals.MedalsActivity" />
+        <activity android:name=".medals.BestMedalsActivity" />
 
         <receiver android:name=".notifications.NotificationReceiver" />
     </application>
