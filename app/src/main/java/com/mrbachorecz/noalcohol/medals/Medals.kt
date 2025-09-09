@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MilitaryTech
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -68,17 +69,33 @@ fun MedalIcon(medal: MedalInfo, iconSize: Dp = 32.dp) {
 fun CurrentAndNextMessage(current: MedalInfo?, next: MedalInfo?) {
     when {
         current == null && next != null -> Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Next medal: ${next.message} ")
+            Text(
+                "Next medal: ${next.message} ",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
             MedalIcon(next)
         }
 
         current != null && next == null -> Text("All medals earned!!!")
         current != null && next != null -> Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Current: ")
+            Text(
+                "Current: ",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
             MedalIcon(current)
-            Text(", next: ${next.message} ")
+            Text(
+                ", next: ${next.message} ",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
             MedalIcon(next)
-            Text(".")
+            Text(
+                ".",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
         }
 
         else -> Text("No medals earned yet.")

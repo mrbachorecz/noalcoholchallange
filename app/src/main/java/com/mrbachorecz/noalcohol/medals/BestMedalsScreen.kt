@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -141,7 +142,11 @@ fun BestMedalsScreen(
             if (currentMaxMedal == 0) {
                 Text(
                     text = "No medal achieved yet.",
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .padding(horizontal = 32.dp)
+                        .alpha(0.7f),
                     textAlign = TextAlign.Center
                 )
             } else {
@@ -149,7 +154,15 @@ fun BestMedalsScreen(
                 val currentBestMedal =
                     sortedMedals.lastOrNull { currentMaxMedal >= it.first }?.second
                 MedalIcon(currentBestMedal!!, iconSize = 150.dp)
-                Text(text = currentBestMedal.message)
+                Text(
+                    text = currentBestMedal.message,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .padding(horizontal = 32.dp)
+                        .alpha(0.7f),
+                    textAlign = TextAlign.Center
+                )
                 val currentMedal =
                     sortedMedals.lastOrNull { numberOfDays >= it.first }?.second
                 val nextMedal = sortedMedals.firstOrNull { numberOfDays < it.first }?.second
