@@ -1,5 +1,6 @@
 package com.mrbachorecz.noalcohol.maincard
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -141,35 +143,58 @@ fun MainCardScreen(
                     ) {
                         // Left Card
                         val numberOfDays = calculateDaysPassed(storedDate)
-                        Card(
+                        Box(
                             modifier = Modifier
                                 .weight(1f) // Each card takes equal space
                                 .padding(end = 8.dp)
-                                .clickable { onBestMedalsClick() },
-                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Optional: Add elevation
                         ) {
-                            Column(
+                            val sortedMedals =
+                                MEDALS.toList().sortedBy { (days, _) -> days }
+                            Card(
                                 modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(), // Add padding inside the card
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                    .fillMaxWidth()
+                                    .clickable { onBestMedalsClick() },
+                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Optional: Add elevation
                             ) {
-                                Text("Best Medal Ever", style = MaterialTheme.typography.titleMedium)
-                                val currentMaxMedal =
-                                    if (maxMedal > numberOfDays) maxMedal else numberOfDays
-                                val sortedMedals = MEDALS.toList().sortedBy { (days, _) -> days }
-                                val currentMedal =
-                                    sortedMedals.lastOrNull { currentMaxMedal >= it.first }?.second
-                                if (currentMedal != null) {
-                                    MedalIcon(currentMedal)
+                                Column(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth(), // Add padding inside the card
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
                                     Text(
-                                        currentMedal.message,
-                                        style = MaterialTheme.typography.bodySmall
+                                        "Best Medal Ever",
+                                        style = MaterialTheme.typography.titleMedium
                                     )
-                                } else {
-                                    Text("Welcome at Start")
+                                    val currentMaxMedal =
+                                        if (maxMedal > numberOfDays) maxMedal else numberOfDays
+                                    val currentMedal =
+                                        sortedMedals.lastOrNull { currentMaxMedal >= it.first }?.second
+                                    if (currentMedal != null) {
+                                        MedalIcon(currentMedal)
+                                        Text(
+                                            currentMedal.message,
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    } else {
+                                        Text("Welcome at Start")
+                                    }
+                                    // Add more content as needed
                                 }
-                                // Add more content as needed
+                            }
+                            val confirmedMedal =
+                                sortedMedals.lastOrNull { maxMedal >= it.first }?.first
+                            val currentMedal =
+                                sortedMedals.lastOrNull { numberOfDays >= it.first }?.first
+                            if (numberOfDays > 0 && currentMedal != null && confirmedMedal != null && currentMedal > confirmedMedal) {
+                                Canvas(
+                                    modifier = Modifier
+                                        .size(5.dp) // Size of the red dot
+                                        .align(Alignment.TopEnd) // Align to top-right of the Box
+                                        .offset(x = (-8).dp, y = 8.dp) // Adjust position slightly
+                                ) {
+                                    drawCircle(color = Color(0xFFC62828))
+                                }
                             }
                         }
 
