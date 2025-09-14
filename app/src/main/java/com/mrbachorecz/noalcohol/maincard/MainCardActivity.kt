@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.mrbachorecz.noalcohol.theme.UITheme
 import com.mrbachorecz.noalcohol.initialdate.DatePickerActivity
@@ -15,18 +18,25 @@ import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 
 class MainCardActivity : ComponentActivity() {
 
+    private var maxMedalState by mutableIntStateOf(0)
+
+    override fun onResume() {
+        super.onResume()
+        val context = this
+        maxMedalState = readBestMedalEver(context)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             UITheme {
                 val context = LocalContext.current
                 val storedDate = readLastDrinkingDate(context)
-                val maxMedal = readBestMedalEver(context)
-
+                maxMedalState = readBestMedalEver(context)
                 if (storedDate.isNotEmpty()) {
                     MainCardScreen(
                         storedDate = storedDate,
-                        maxMedal = maxMedal,
+                        maxMedal = maxMedalState,
                         onReset = {
                             startActivity(Intent(this, DatePickerActivity::class.java))
                             finish()

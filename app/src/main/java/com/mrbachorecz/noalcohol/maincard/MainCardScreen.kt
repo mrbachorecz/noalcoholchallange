@@ -1,5 +1,6 @@
 package com.mrbachorecz.noalcohol.maincard
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -150,11 +151,19 @@ fun MainCardScreen(
                         ) {
                             val sortedMedals =
                                 MEDALS.toList().sortedBy { (days, _) -> days }
+                            val confirmedMedalInfo =
+                                sortedMedals.lastOrNull { maxMedal >= it.first }?.first
+                            val currentMedalInfo =
+                                sortedMedals.lastOrNull { numberOfDays >= it.first }?.first
+                            val actionNeeded =
+                                currentMedalInfo != null && (confirmedMedalInfo == null || currentMedalInfo > confirmedMedalInfo)
+                            val redColor = Color(0xFFC62828)
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable { onBestMedalsClick() },
-                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Optional: Add elevation
+                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                                border = if (actionNeeded) BorderStroke(2.dp, redColor) else null
                             ) {
                                 Column(
                                     modifier = Modifier
@@ -166,34 +175,30 @@ fun MainCardScreen(
                                         "Best Medal Ever",
                                         style = MaterialTheme.typography.titleMedium
                                     )
-                                    val currentMaxMedal =
+                                    val currentOrMaxMedal =
                                         if (maxMedal > numberOfDays) maxMedal else numberOfDays
-                                    val currentMedal =
-                                        sortedMedals.lastOrNull { currentMaxMedal >= it.first }?.second
-                                    if (currentMedal != null) {
-                                        MedalIcon(currentMedal)
-                                        Text(
-                                            currentMedal.message,
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
+                                    val currentOrMaxMedalInfo =
+                                        sortedMedals.lastOrNull { currentOrMaxMedal >= it.first }?.second
+                                    if (currentOrMaxMedalInfo != null) {
+                                            MedalIcon(currentOrMaxMedalInfo)
+                                            Text(
+                                                currentOrMaxMedalInfo.message,
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
                                     } else {
                                         Text("Welcome at Start")
                                     }
                                     // Add more content as needed
                                 }
                             }
-                            val confirmedMedal =
-                                sortedMedals.lastOrNull { maxMedal >= it.first }?.first
-                            val currentMedal =
-                                sortedMedals.lastOrNull { numberOfDays >= it.first }?.first
-                            if (numberOfDays > 0 && currentMedal != null && confirmedMedal != null && currentMedal > confirmedMedal) {
+                            if (actionNeeded) {
                                 Canvas(
                                     modifier = Modifier
                                         .size(5.dp) // Size of the red dot
                                         .align(Alignment.TopEnd) // Align to top-right of the Box
                                         .offset(x = (-8).dp, y = 8.dp) // Adjust position slightly
                                 ) {
-                                    drawCircle(color = Color(0xFFC62828))
+                                    drawCircle(color = redColor)
                                 }
                             }
                         }
