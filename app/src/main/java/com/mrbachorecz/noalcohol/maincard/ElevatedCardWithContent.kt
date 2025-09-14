@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,7 +47,7 @@ fun ElevatedCardWithContent(
     onLongPress: () -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
-    var progress by remember { mutableStateOf(0f) }
+    var progress by remember { mutableFloatStateOf(0f) }
     val animatedProgress by animateFloatAsState(targetValue = progress, label = "ProgressAnimation")
 
     // Duration for the long press to trigger the reset
@@ -56,7 +57,8 @@ fun ElevatedCardWithContent(
         if (isPressed) {
             val startTime = System.currentTimeMillis()
             while (isPressed && (System.currentTimeMillis() - startTime) < longPressDurationMillis) {
-                progress = (System.currentTimeMillis() - startTime).toFloat() / longPressDurationMillis
+                progress =
+                    (System.currentTimeMillis() - startTime).toFloat() / longPressDurationMillis
                 delay(16) // Update roughly every frame
             }
             if (isPressed && (System.currentTimeMillis() - startTime) >= longPressDurationMillis) {
@@ -64,7 +66,7 @@ fun ElevatedCardWithContent(
                 progress = 0f // Reset progress after action
             }
             // If finger is lifted before duration, reset progress
-            if(!isPressed) {
+            if (!isPressed) {
                 progress = 0f
             }
         } else {

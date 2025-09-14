@@ -1,6 +1,5 @@
 package com.mrbachorecz.noalcohol.initialdate
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePicker
@@ -66,7 +65,7 @@ fun FancyDateInput(
             }
         }
     ) {
-        DatePicker(state = datePickerState, title = {DatePickerTitle("Last drink date")})
+        DatePicker(state = datePickerState, title = { DatePickerTitle("Last drink date") })
     }
 }
 

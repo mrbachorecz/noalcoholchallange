@@ -8,13 +8,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import com.mrbachorecz.noalcohol.theme.UITheme
 import com.mrbachorecz.noalcohol.initialdate.DatePickerActivity
 import com.mrbachorecz.noalcohol.medals.BestMedalsActivity
 import com.mrbachorecz.noalcohol.medals.MedalsActivity
 import com.mrbachorecz.noalcohol.settings.SettingsActivity
 import com.mrbachorecz.noalcohol.storage.readBestMedalEver
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
+import com.mrbachorecz.noalcohol.theme.UITheme
 
 class MainCardActivity : ComponentActivity() {
 

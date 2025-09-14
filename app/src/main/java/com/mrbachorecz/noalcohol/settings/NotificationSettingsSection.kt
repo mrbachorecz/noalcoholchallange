@@ -67,11 +67,20 @@ fun NotificationSettingsSection(
             Text(
                 text = "Notification time",
                 modifier = Modifier.weight(1f),
-                color = if (allowNotification) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                color = if (allowNotification) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.38f
+                )
             )
             Text(
-                text = String.format(Locale.getDefault(), "%02d:%02d", notificationTimePickerState.hour, notificationTimePickerState.minute),
-                color = if (allowNotification) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                text = String.format(
+                    Locale.getDefault(),
+                    "%02d:%02d",
+                    notificationTimePickerState.hour,
+                    notificationTimePickerState.minute
+                ),
+                color = if (allowNotification) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.38f
+                )
             )
         }
         if (showTimePicker.value) {
@@ -79,7 +88,10 @@ fun NotificationSettingsSection(
                 timePickerState = notificationTimePickerState,
                 onDismiss = { showTimePicker.value = false },
                 onConfirm = {
-                    onTimeSelected(notificationTimePickerState.hour, notificationTimePickerState.minute)
+                    onTimeSelected(
+                        notificationTimePickerState.hour,
+                        notificationTimePickerState.minute
+                    )
                     showTimePicker.value = false
                 }
             )

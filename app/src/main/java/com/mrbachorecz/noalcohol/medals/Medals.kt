@@ -1,6 +1,5 @@
 package com.mrbachorecz.noalcohol.medals
 
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box

@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.platform.LocalContext
-import com.mrbachorecz.noalcohol.theme.UITheme
 import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils
 import com.mrbachorecz.noalcohol.notifications.NotificationScheduler
 import com.mrbachorecz.noalcohol.storage.readNotificationAllowed
@@ -16,7 +15,7 @@ import com.mrbachorecz.noalcohol.storage.writeNotificationAllowed
 import com.mrbachorecz.noalcohol.storage.writeNotificationHours
 import com.mrbachorecz.noalcohol.storage.writeNotificationMinutes
 import com.mrbachorecz.noalcohol.storage.writeThemeSetting
-import com.mrbachorecz.noalcohol.theme.ThemeManager
+import com.mrbachorecz.noalcohol.theme.UITheme
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

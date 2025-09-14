@@ -180,11 +180,11 @@ fun MainCardScreen(
                                     val currentOrMaxMedalInfo =
                                         sortedMedals.lastOrNull { currentOrMaxMedal >= it.first }?.second
                                     if (currentOrMaxMedalInfo != null) {
-                                            MedalIcon(currentOrMaxMedalInfo)
-                                            Text(
-                                                currentOrMaxMedalInfo.message,
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
+                                        MedalIcon(currentOrMaxMedalInfo)
+                                        Text(
+                                            currentOrMaxMedalInfo.message,
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
                                     } else {
                                         Text("Welcome at Start")
                                     }
@@ -216,12 +216,19 @@ fun MainCardScreen(
                             ) {
                                 Text("Health impact", style = MaterialTheme.typography.titleMedium)
                                 if (numberOfDays > 0) {
-                                    val sortedImpacts = HEALTH_IMPACTS.toList().sortedBy { (days, _) -> days }
+                                    val sortedImpacts =
+                                        HEALTH_IMPACTS.toList().sortedBy { (days, _) -> days }
                                     val currentImpact =
                                         sortedImpacts.lastOrNull { numberOfDays >= it.first }?.second!!
-                                    Text("After ${currentImpact.title}", style = MaterialTheme.typography.titleMedium)
+                                    Text(
+                                        "After ${currentImpact.title}",
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
                                     for (impact in currentImpact.impacts) {
-                                        Text("- $impact", style = MaterialTheme.typography.bodyMedium)
+                                        Text(
+                                            "- $impact",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
                                     }
                                 } else {
                                     Text("Welcome at Start, wait at least 24 hours")

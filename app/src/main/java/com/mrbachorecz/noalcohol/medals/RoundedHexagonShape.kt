@@ -33,7 +33,8 @@ fun drawRoundedHexagonPath(size: Size, cornerRadiusPx: Float): Path {
     val centerY = size.height / 2f
 
     // Ensure cornerRadiusPx is not too large
-    val effectiveCornerRadius = min(cornerRadiusPx, radius / 2f) // Heuristic to avoid overly large radii
+    val effectiveCornerRadius =
+        min(cornerRadiusPx, radius / 2f) // Heuristic to avoid overly large radii
 
     val points = Array(6) { Offset(0f, 0f) }
     val angleStep = (2 * PI / 6).toFloat() // 60 degrees in radians
