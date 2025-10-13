@@ -20,8 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mrbachorecz.noalcohol.initialdate.DatePickerActivity
 import com.mrbachorecz.noalcohol.maincard.MainCardActivity
-import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils.checkAndRequestNotificationPermission
-import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils.createRequestPermissionLauncher
+import com.mrbachorecz.noalcohol.notifications.NotificationPermissionUtils
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import com.mrbachorecz.noalcohol.submitbutton.SubmitButton
 import com.mrbachorecz.noalcohol.theme.UITheme
@@ -34,8 +33,10 @@ class InitActivity : ComponentActivity() {
         val storedDate = readLastDrinkingDate(context)
 
         if (storedDate.isEmpty()) {
-            val requestPermissionLauncher = createRequestPermissionLauncher(this) { isGranted -> }
-            checkAndRequestNotificationPermission(this, requestPermissionLauncher)
+            val notificationRequestPermissionLauncher = NotificationPermissionUtils
+                .createRequestPermissionLauncher(this) { isGranted -> }
+            NotificationPermissionUtils
+                .checkAndRequestNotificationPermission(this, notificationRequestPermissionLauncher)
             setContent {
                 UITheme {
                     Box(
@@ -75,3 +76,22 @@ class InitActivity : ComponentActivity() {
         }
     }
 }
+
+// @Composable
+// fun PermissionRationaleDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+//     AlertDialog(
+//         onDismissRequest = onDismiss,
+//         title = { Text("Allow Background Activity") },
+//         text = { Text("To ensure your sobriety timer and milestone notifications are always accurate, please allow the app to run in the background. This prevents the system from stopping it.") },
+//         confirmButton = {
+//             TextButton(onClick = onConfirm) {
+//                 Text("OK")
+//             }
+//         },
+//         dismissButton = {
+//             TextButton(onClick = onDismiss) {
+//                 Text("Cancel")
+//             }
+//         }
+//     )
+// }

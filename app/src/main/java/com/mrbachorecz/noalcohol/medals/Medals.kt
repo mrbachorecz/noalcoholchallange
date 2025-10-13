@@ -25,6 +25,7 @@ val Gold = Color(0xFFFFD700)
 val Silver = Color(0xFFC0C0C0)
 val Bronze = Color(0xFFCD7F32)
 val Platinum = Color(0xFFE5E4E2)
+val Diamond = Color(0xFFB9F2FF)
 
 val MEDALS: Map<Int, MedalInfo> = mapOf(
     1 to MedalInfo(Color.White, "1 day", "white"),
@@ -32,6 +33,7 @@ val MEDALS: Map<Int, MedalInfo> = mapOf(
     30 to MedalInfo(Silver, "1 month", "silver"),
     100 to MedalInfo(Gold, "100 days", "gold"),
     365 to MedalInfo(Platinum, "1 year", "platinum"),
+    1095 to MedalInfo(Diamond, "3 years", "diamond"),
 )
 
 data class MedalInfo(

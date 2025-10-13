@@ -13,6 +13,8 @@ private const val NOTIFICATION_MINUTES_KEY = "notificationMinutes"
 private const val THEME_SETTING_KEY = "themeSetting"
 private const val BEST_MEDAL_EVER_KEY = "bestMedalEver"
 
+private const val BATTERY_OPTIMIZATION_PERMISSION = "batteryOptimizationPermission"
+
 fun readLastDrinkingDate(context: Context): String {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     return prefs.getString(STORED_DATE_KEY, "") ?: ""
@@ -76,4 +78,14 @@ fun readBestMedalEver(context: Context): Int {
 fun writeBestMedalEver(context: Context, value: Int) {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     prefs.edit { putInt(BEST_MEDAL_EVER_KEY, value) }
+}
+
+fun readBatteryOptimizationPermission(context: Context): String {
+    val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    return prefs.getString(BATTERY_OPTIMIZATION_PERMISSION, "") ?: ""
+}
+
+fun writeBatteryOptimizationPermission(context: Context, value: String) {
+    val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    prefs.edit { putString(BATTERY_OPTIMIZATION_PERMISSION, value) }
 }
