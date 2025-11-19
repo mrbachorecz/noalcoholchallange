@@ -46,7 +46,15 @@ fun BestMedalsScreen(
     // Use LaunchedEffect to show the dialog when the condition is met
     // and the dialog hasn't been shown yet for this specific state.
     LaunchedEffect(numberOfDays, bestMedal) {
-        if (numberOfDays > bestMedal && !dialogTriggered) {
+        val sortedMedals =
+            MEDALS.toList().sortedBy { (days, _) -> days }
+        val confirmedMedalInfo =
+            sortedMedals.lastOrNull { bestMedal >= it.first }?.first
+        val currentMedalInfo =
+            sortedMedals.lastOrNull { numberOfDays >= it.first }?.first
+        val actionNeeded =
+            currentMedalInfo != null && (confirmedMedalInfo == null || currentMedalInfo > confirmedMedalInfo)
+        if (actionNeeded && !dialogTriggered) {
             showDialog = true
             dialogTriggered = true // Mark that the dialog has been triggered for this condition
         }
