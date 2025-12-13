@@ -63,12 +63,14 @@ fun ElevatedCardWithContent(
     val month = calendar.get(Calendar.MONTH)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-    val isDecember = month == Calendar.DECEMBER
+    val isWinter = month == Calendar.DECEMBER || month == Calendar.JANUARY
     val isNewYear = (month == Calendar.DECEMBER && day == 31) || (month == Calendar.JANUARY && day == 1)
+    val isChristmas = month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26)
 
     // Effect States
     var showConfetti by remember { mutableStateOf(isNewYear) }
-    var showSnow by remember { mutableStateOf(isDecember) }
+    var showSnow by remember { mutableStateOf(isWinter) }
+    var showOrnaments by remember { mutableStateOf(isChristmas) }
 
     // Duration for the long press to trigger the reset
     val longPressDurationMillis = 650L // 0.65 seconds
@@ -131,6 +133,11 @@ fun ElevatedCardWithContent(
             // 2. Snowflakes (December/New Year) - Happens after or during
             if (showSnow) {
                 SnowfallEffect()
+            }
+
+            // 3. Shiny Ornaments (Christmas/December - First 2 seconds)
+            if (showOrnaments) {
+                ChristmasOrnamentsEffect()
             }
 
             // This is your original text content, placed on top of the drawing
@@ -387,6 +394,90 @@ fun SnowfallEffect() {
                     y = flake.y * size.height
                 )
             )
+        }
+    }
+}
+
+// 3. ORNAMENTS LOGIC
+private data class ChristmasOrnament(
+    var x: Float,
+    var y: Float,
+    val speed: Float,
+    val radius: Float,
+    val color: Color
+)
+
+@Composable
+fun ChristmasOrnamentsEffect() {
+    val ornaments = remember {
+        mutableStateListOf<ChristmasOrnament>().apply {
+            val ornamentColors = listOf(
+                Color(0xFFD4AF37), // Gold
+                Color(0xFFC0C0C0), // Silver
+                Color(0xFFB22222), // Deep Red
+                Color(0xFF228B22)  // Forest Green
+            )
+
+            repeat(20) {
+                add(
+                    ChristmasOrnament(
+                        x = Random.nextFloat(),
+                        // Start them scattered well above the screen so they rain down
+                        y = Random.nextFloat() * -1.5f,
+                        // Fall faster than snow
+                        speed = Random.nextFloat() * 0.015f + 0.01f,
+                        radius = Random.nextFloat() * 8f + 6f, // Larger than snow
+                        color = ornamentColors.random()
+                    )
+                )
+            }
+        }
+    }
+
+    var frameTime by remember { mutableLongStateOf(0L) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            withFrameNanos {
+                frameTime = it
+                ornaments.forEach { ball ->
+                    ball.y += ball.speed
+
+                    // RESET LOGIC: If ball goes off the bottom, send it back to the top
+                    if (ball.y > 1.2f) {
+                        ball.y = -0.2f // Start slightly above screen
+                        ball.x = Random.nextFloat() // New random X position
+                    }
+                }
+            }
+        }
+    }
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        frameTime
+        ornaments.forEach { ball ->
+            // Only draw if within reasonable bounds (optimization)
+            if (ball.y < 1.2f) {
+                val centerX = ball.x * size.width
+                val centerY = ball.y * size.height
+
+                // 1. Draw the main colored ball
+                drawCircle(
+                    color = ball.color,
+                    radius = ball.radius,
+                    center = Offset(centerX, centerY)
+                )
+
+                // 2. Draw a "Shiny" highlight (small white reflection top-left)
+                drawCircle(
+                    color = Color.White.copy(alpha = 0.6f),
+                    radius = ball.radius * 0.3f,
+                    center = Offset(
+                        centerX - (ball.radius * 0.35f),
+                        centerY - (ball.radius * 0.35f)
+                    )
+                )
+            }
         }
     }
 }
