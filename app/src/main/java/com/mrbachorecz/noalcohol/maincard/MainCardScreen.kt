@@ -34,6 +34,7 @@ import com.mrbachorecz.noalcohol.healthimpact.HEALTH_IMPACTS
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.medals.MEDALS
 import com.mrbachorecz.noalcohol.medals.MedalIcon
+import java.util.Calendar
 import kotlin.math.roundToInt
 
 
@@ -51,6 +52,14 @@ val greetings = listOf(
     "Happy to See You",
 )
 
+val christmasTimeGreetings = listOf(
+    "Merry Christmas",
+    "Happy Holidays",
+    "Sober & Bright",
+)
+
+const val happyNewYear = "Happy New Year"
+
 val topAppBarHeight = 64.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +73,23 @@ fun MainCardScreen(
     onBestMedalsClick: () -> Unit,
 ) {
 
-    val randomGreeting = remember { greetings.random() }
+    val calendar = remember { Calendar.getInstance() }
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val isChristmas = month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26)
+    val isNewYear = month == Calendar.JANUARY && day == 1
+
+
+    val randomGreeting = remember {
+        if (isNewYear) {
+            happyNewYear
+        } else if (isChristmas) {
+            christmasTimeGreetings.random()
+        } else {
+            greetings.random()
+        }
+    }
     val randomQuote = remember { sobrietyQuotes.random() }
 
     if (storedDate.isNotEmpty()) {
