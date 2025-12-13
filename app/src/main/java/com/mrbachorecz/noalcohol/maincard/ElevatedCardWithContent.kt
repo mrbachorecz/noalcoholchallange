@@ -78,14 +78,6 @@ fun ElevatedCardWithContent(
     // Duration for the long press to trigger the reset
     val longPressDurationMillis = 650L // 0.65 seconds
 
-    // Logic to turn off snow after 2 seconds
-    LaunchedEffect(Unit) {
-        if (isDecember) {
-            delay(10000)
-            showSnow = false
-        }
-    }
-
     LaunchedEffect(isPressed) {
         if (isPressed) {
             val startTime = System.currentTimeMillis()
