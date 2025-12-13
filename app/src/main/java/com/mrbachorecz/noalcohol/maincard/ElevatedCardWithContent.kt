@@ -20,12 +20,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -39,6 +43,9 @@ import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
 
+import java.util.Calendar
+import kotlin.random.Random
+
 @Composable
 fun ElevatedCardWithContent(
     text: String,
@@ -46,6 +53,22 @@ fun ElevatedCardWithContent(
     circleSize: Dp,
     onLongPress: () -> Unit
 ) {
+    // Check if it is December
+    val isDecember = remember {
+        Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER
+    }
+
+    // State to control snow visibility (starts true if December, turns off after 2s)
+    var showSnow by remember { mutableStateOf(isDecember) }
+    // Logic to turn off snow after 2 seconds
+    LaunchedEffect(Unit) {
+        if (isDecember) {
+            delay(20000)
+            showSnow = false
+        }
+    }
+
+
     var isPressed by remember { mutableStateOf(false) }
     var progress by remember { mutableFloatStateOf(0f) }
     val animatedProgress by animateFloatAsState(targetValue = progress, label = "ProgressAnimation")
@@ -102,6 +125,11 @@ fun ElevatedCardWithContent(
         ) {
             // Draw the custom curves using Canvas
             CurvesOnTheCircle()
+
+            // Draw Snowflakes if active
+            if (showSnow) {
+                SnowfallEffect()
+            }
 
             // This is your original text content, placed on top of the drawing
             Column(
@@ -229,5 +257,69 @@ fun CurvesOnTheCircle() {
             color = Color.White.copy(alpha = 0.45f),
             style = Stroke(width = 7f)
         )
+    }
+}
+
+// Data class to hold snowflake state
+private data class Snowflake(
+    var x: Float,
+    var y: Float,
+    val speed: Float,
+    val radius: Float,
+    val alpha: Float
+)
+
+@Composable
+fun SnowfallEffect() {
+    // Generate initial snowflakes
+    val snowflakes = remember {
+        mutableStateListOf<Snowflake>().apply {
+            repeat(40) {
+                add(
+                    Snowflake(
+                        x = Random.nextFloat(), // 0.0 to 1.0 (relative width)
+                        y = Random.nextFloat() * -1f, // Start above the screen
+                        speed = Random.nextFloat() * 0.01f + 0.005f, // Speed varies
+                        radius = Random.nextFloat() * 4f + 2f,
+                        alpha = Random.nextFloat() * 0.5f + 0.3f
+                    )
+                )
+            }
+        }
+    }
+
+    var frameTime by remember { mutableLongStateOf(0L) }
+
+    // Animation Loop
+    LaunchedEffect(Unit) {
+        while (true) {
+            withFrameNanos {
+                frameTime = it // Trigger recomposition
+                snowflakes.forEach { flake ->
+                    flake.y += flake.speed
+                    // If flake goes off bottom, reset to top
+                    if (flake.y > 1.0f) {
+                        flake.y = -0.1f
+                        flake.x = Random.nextFloat()
+                    }
+                }
+            }
+        }
+    }
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        // Read frameTime to force redraw on every frame
+        frameTime
+
+        snowflakes.forEach { flake ->
+            drawCircle(
+                color = Color.White.copy(alpha = flake.alpha),
+                radius = flake.radius,
+                center = Offset(
+                    x = flake.x * size.width,
+                    y = flake.y * size.height
+                )
+            )
+        }
     }
 }
