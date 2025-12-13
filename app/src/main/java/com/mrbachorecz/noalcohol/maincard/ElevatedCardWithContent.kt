@@ -29,23 +29,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import java.util.Calendar
 import kotlin.math.cos
 import kotlin.math.sin
+
+import java.util.Calendar
 import kotlin.random.Random
 
 @Composable
@@ -66,14 +65,6 @@ fun ElevatedCardWithContent(
 
     // State to control snow visibility (starts true if December, turns off after 2s)
     var showSnow by remember { mutableStateOf(isDecember) }
-
-    // Animate the alpha of the snow layer
-    // When showSnow becomes false, this will animate from 1f to 0f over 1 second (1000ms)
-    val snowAlpha by animateFloatAsState(
-        targetValue = if (showSnow) 1f else 0f,
-        animationSpec = tween(durationMillis = 1000),
-        label = "SnowFade"
-    )
 
     // Duration for the long press to trigger the reset
     val longPressDurationMillis = 650L // 0.65 seconds
@@ -98,157 +89,71 @@ fun ElevatedCardWithContent(
             progress = 0f
         }
     }
-
-    // --- NEW: Wrap everything in a Box so we can layer the Hat on top ---
-    Box(contentAlignment = Alignment.Center) {
-
-        // This is your existing Card logic
-        Card(
+    Card(
+        modifier = Modifier
+            .size(circleSize)
+            .padding(16.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        isPressed = true
+                        tryAwaitRelease() // Wait until the press is released
+                        isPressed = false
+                    },
+                )
+            },
+        shape = CircleShape,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        )
+    ) {
+        Box(
             modifier = Modifier
-                .size(circleSize)
-                .padding(16.dp)
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onPress = {
-                            isPressed = true
-                            tryAwaitRelease() // Wait until the press is released
-                            isPressed = false
-                        },
-                    )
-                },
-            shape = CircleShape,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            ),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            )
+                .fillMaxSize()
+                .clip(CircleShape) // This clips the curves to the circle shape
+                .background(MaterialTheme.colorScheme.primary) // The main background color
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary)
+            // Draw the custom curves using Canvas
+            CurvesOnTheCircle()
+
+            // Draw Snowflakes if active
+            if (showSnow) {
+                SnowfallEffect()
+            }
+
+            // This is your original text content, placed on top of the drawing
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Draw the custom curves using Canvas
-                CurvesOnTheCircle()
-
-                // Draw Snowflakes if alpha is > 0
-                if (snowAlpha > 0f) {
-                    SnowfallEffect(alphaMultiplier = snowAlpha)
-                }
-
-                // This is your original text content, placed on top of the drawing
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = text,
-                        fontSize = 52.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Text(
-                        text = unit,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Light,
-                        color = Color.White
-                    )
-                }
-
-                if (isPressed && progress > 0f) {
-                    CircularProgressIndicator(
-                        progress = { animatedProgress },
-                        modifier = Modifier.size(circleSize + 16.dp), // Make progress slightly larger than card
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant, // Or any other color for the background track
-                        strokeWidth = 4.dp,
-                        strokeCap = StrokeCap.Round
-                    )
-                }
-            }
-        }
-
-        // --- NEW: The Santa Hat ---
-        // We place it only if it's December.
-        // We align it to TopStart (Top Left) and offset it slightly to sit on the "rim".
-        if (isDecember) {
-            SantaHat(
-                modifier = Modifier
-                    // Size of the hat relative to the card. Adjust 60.dp as needed.
-                    .size(circleSize / 3.5f)
-                    .align(Alignment.TopStart)
-                    // Nudge it slightly inwards and downwards to sit on the circle edge
-                    .padding(start = 10.dp, top = 4.dp)
-                    // Rotate it slightly for style
-                    .graphicsLayer(rotationZ = -15f)
-            )
-        }
-    }
-}
-
-// Data class to hold snowflake state
-private data class Snowflake(
-    var x: Float,
-    var y: Float,
-    val speed: Float,
-    val radius: Float,
-    val alpha: Float
-)
-
-@Composable
-fun SnowfallEffect(alphaMultiplier: Float) {
-    // Generate initial snowflakes
-    val snowflakes = remember {
-        mutableStateListOf<Snowflake>().apply {
-            repeat(40) {
-                add(
-                    Snowflake(
-                        x = Random.nextFloat(), // 0.0 to 1.0 (relative width)
-                        y = Random.nextFloat() * -1f, // Start above the screen
-                        speed = Random.nextFloat() * 0.01f + 0.005f, // Speed varies
-                        radius = Random.nextFloat() * 4f + 2f,
-                        alpha = Random.nextFloat() * 0.5f + 0.3f
-                    )
+                Text(
+                    text = text,
+                    fontSize = 52.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = unit,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.White
                 )
             }
-        }
-    }
 
-    var frameTime by remember { mutableLongStateOf(0L) }
-
-    // Animation Loop
-    LaunchedEffect(Unit) {
-        while (true) {
-            withFrameNanos {
-                frameTime = it // Trigger recomposition
-                snowflakes.forEach { flake ->
-                    flake.y += flake.speed
-                    // If flake goes off bottom, reset to top
-                    if (flake.y > 1.0f) {
-                        flake.y = -0.1f
-                        flake.x = Random.nextFloat()
-                    }
-                }
-            }
-        }
-    }
-
-    Canvas(modifier = Modifier.fillMaxSize().alpha(alphaMultiplier)) {
-        // Read frameTime to force redraw on every frame
-        frameTime
-
-        snowflakes.forEach { flake ->
-            drawCircle(
-                color = Color.White.copy(alpha = flake.alpha),
-                radius = flake.radius,
-                center = Offset(
-                    x = flake.x * size.width,
-                    y = flake.y * size.height
+            if (isPressed && progress > 0f) {
+                CircularProgressIndicator(
+                    progress = { animatedProgress },
+                    modifier = Modifier.size(circleSize + 16.dp), // Make progress slightly larger than card
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant, // Or any other color for the background track
+                    strokeWidth = 4.dp,
+                    strokeCap = StrokeCap.Round
                 )
-            )
+            }
         }
     }
 }
@@ -345,5 +250,69 @@ fun CurvesOnTheCircle() {
             color = Color.White.copy(alpha = 0.45f),
             style = Stroke(width = 7f)
         )
+    }
+}
+
+// Data class to hold snowflake state
+private data class Snowflake(
+    var x: Float,
+    var y: Float,
+    val speed: Float,
+    val radius: Float,
+    val alpha: Float
+)
+
+@Composable
+fun SnowfallEffect() {
+    // Generate initial snowflakes
+    val snowflakes = remember {
+        mutableStateListOf<Snowflake>().apply {
+            repeat(40) {
+                add(
+                    Snowflake(
+                        x = Random.nextFloat(), // 0.0 to 1.0 (relative width)
+                        y = Random.nextFloat() * -1f, // Start above the screen
+                        speed = Random.nextFloat() * 0.01f + 0.005f, // Speed varies
+                        radius = Random.nextFloat() * 4f + 2f,
+                        alpha = Random.nextFloat() * 0.5f + 0.3f
+                    )
+                )
+            }
+        }
+    }
+
+    var frameTime by remember { mutableLongStateOf(0L) }
+
+    // Animation Loop
+    LaunchedEffect(Unit) {
+        while (true) {
+            withFrameNanos {
+                frameTime = it // Trigger recomposition
+                snowflakes.forEach { flake ->
+                    flake.y += flake.speed
+                    // If flake goes off bottom, reset to top
+                    if (flake.y > 1.0f) {
+                        flake.y = -0.1f
+                        flake.x = Random.nextFloat()
+                    }
+                }
+            }
+        }
+    }
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        // Read frameTime to force redraw on every frame
+        frameTime
+
+        snowflakes.forEach { flake ->
+            drawCircle(
+                color = Color.White.copy(alpha = flake.alpha),
+                radius = flake.radius,
+                center = Offset(
+                    x = flake.x * size.width,
+                    y = flake.y * size.height
+                )
+            )
+        }
     }
 }
