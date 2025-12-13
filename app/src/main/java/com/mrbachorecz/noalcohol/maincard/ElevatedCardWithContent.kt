@@ -58,12 +58,16 @@ fun ElevatedCardWithContent(
     var progress by remember { mutableFloatStateOf(0f) }
     val animatedProgress by animateFloatAsState(targetValue = progress, label = "ProgressAnimation")
 
-    // Check if it is December
-    val isDecember = remember {
-        Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER
-    }
+    // Date Checks
+    val calendar = remember { Calendar.getInstance() }
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-    // State to control snow visibility (starts true if December, turns off after 2s)
+    val isDecember = month == Calendar.DECEMBER
+    val isNewYear = (month == Calendar.DECEMBER && day == 31) || (month == Calendar.JANUARY && day == 1)
+
+    // Effect States
+    var showConfetti by remember { mutableStateOf(isNewYear) }
     var showSnow by remember { mutableStateOf(isDecember) }
 
     // Duration for the long press to trigger the reset
@@ -119,7 +123,12 @@ fun ElevatedCardWithContent(
             // Draw the custom curves using Canvas
             CurvesOnTheCircle()
 
-            // Draw Snowflakes if active
+            // 1. Confetti (New Year) - Happens first
+            if (showConfetti) {
+                ConfettiEffect()
+            }
+
+            // 2. Snowflakes (December/New Year) - Happens after or during
             if (showSnow) {
                 SnowfallEffect()
             }
@@ -253,7 +262,72 @@ fun CurvesOnTheCircle() {
     }
 }
 
-// Data class to hold snowflake state
+// --- EFFECTS ---
+
+// 1. CONFETTI LOGIC
+private data class ConfettiParticle(
+    var x: Float,
+    var y: Float,
+    var vx: Float,
+    var vy: Float,
+    val color: Color,
+    val size: Float
+)
+
+@Composable
+fun ConfettiEffect() {
+    val particles = remember {
+        mutableStateListOf<ConfettiParticle>().apply {
+            val colors = listOf(Color.Red, Color.Yellow, Color.Green, Color.Blue, Color.Magenta, Color.White)
+            // 1. More confetti (300 particles)
+            repeat(300) {
+                add(
+                    ConfettiParticle(
+                        x = 0.5f,
+                        y = 0.5f,
+                        // 2. Bigger Bang: Increased velocity range for wider explosion
+                        vx = (Random.nextFloat() - 0.5f) * 0.07f,
+                        vy = (Random.nextFloat() - 0.5f) * 0.07f - 0.02f,
+                        color = colors.random(),
+                        // 3. Even Smaller: Size range approx 1.5dp to 4.5dp
+                        size = Random.nextFloat() * 3f + 1.5f
+                    )
+                )
+            }
+        }
+    }
+
+    var frameTime by remember { mutableLongStateOf(0L) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            withFrameNanos {
+                frameTime = it
+                particles.forEach { p ->
+                    p.x += p.vx
+                    p.y += p.vy
+                    p.vy += 0.0005f // Lower gravity for "floaty" feel
+                    p.vx *= 0.92f   // Higher drag so they slow down faster after the initial bang
+                }
+            }
+        }
+    }
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        frameTime
+        particles.forEach { p ->
+            if (p.y < 1.5f && p.x > -0.5f && p.x < 1.5f) {
+                drawCircle(
+                    color = p.color,
+                    radius = p.size,
+                    center = Offset(p.x * size.width, p.y * size.height)
+                )
+            }
+        }
+    }
+}
+
+// 2. SNOW LOGIC
 private data class Snowflake(
     var x: Float,
     var y: Float,
