@@ -1,104 +1,65 @@
-package com.mrbachorecz.noalcohol.maincard
-
-val sobrietyQuotes = listOf(
-    "The first step towards getting somewhere is to decide you’re not going to stay where you are.",
-    "One day at a time.",
-    "Your best days are ahead of you.",
-    "Recovery is not for people who need it, it’s for people who want it.",
-    "It does not matter how slowly you go as long as you do not stop. — Confucius",
-    "Small steps every day.",
-    "You are stronger than you think.",
-    "Sobriety is a journey, not a destination.",
-    "Believe you can and you’re halfway there. — Theodore Roosevelt",
-    "Progress, not perfection.",
-    "Every day is a new beginning.",
-    "The only way out is through.",
-    "You don’t have to see the whole staircase, just take the first step. — Martin Luther King Jr.",
-    "Difficult roads often lead to beautiful destinations.",
-    "Stay patient and trust your journey.",
-    "Your future is created by what you do today, not tomorrow.",
-    "Strength grows in the moments when you think you can’t go on but you keep going anyway.",
-    "You are not your addiction.",
-    "Every accomplishment starts with the decision to try.",
-    "Let your faith be bigger than your fear.",
-    "Sobriety is self-respect in action.",
-    "You are worth the fight.",
-    "The comeback is always stronger than the setback.",
-    "Don’t let the past steal your present.",
-    "You didn’t come this far to only come this far.",
-    "Healing is not linear.",
-    "Your story isn’t over yet.",
-    "You are capable of amazing things.",
-    "One step at a time is progress.",
-    "You are not alone in this journey.",
-    "Hope is stronger than fear.",
-    "Choose recovery every day.",
-    "Your life matters.",
-    "Be proud of how far you’ve come.",
-    "You are more than your mistakes.",
-    "Stay strong, your future self will thank you.",
-    "Recovery is possible.",
-    "You have the power to change.",
-    "Let go of what you can’t control.",
-    "Celebrate every victory, no matter how small.",
-    "You are enough.",
-    "Keep moving forward.",
-    "Your struggle is part of your story.",
-    "Don’t give up on yourself.",
-    "You are braver than you believe.",
-    "Sobriety is a gift you give yourself.",
-    "Every day sober is a victory.",
-    "You are rewriting your story.",
-    "The best view comes after the hardest climb.",
-    "Your journey inspires others.",
-    "The only journey is the one within. — Rainer Maria Rilke",
-    "You are never too old to set another goal or to dream a new dream. — C.S. Lewis",
-    "What lies behind us and what lies before us are tiny matters compared to what lies within us. — Ralph Waldo Emerson",
-    "The greatest glory in living lies not in never falling, but in rising every time we fall. — Nelson Mandela",
-    "Success is not final, failure is not fatal: It is the courage to continue that counts. — Winston Churchill",
-    "The best way out is always through. — Robert Frost",
-    "Our greatest glory is not in never falling, but in rising every time we fall. — Confucius",
-    "You must do the things you think you cannot do. — Eleanor Roosevelt",
-    "The only limit to our realization of tomorrow will be our doubts of today. — Franklin D. Roosevelt",
-    "It always seems impossible until it’s done. — Nelson Mandela",
-    "Every day is a chance to get stronger.",
-    "You are the author of your own story.",
-    "Let today be the start of something new.",
-    "Your present circumstances don’t determine where you can go; they merely determine where you start.",
-    "You are not defined by your past.",
-    "The pain you feel today will be the strength you feel tomorrow.",
-    "You are capable of more than you know.",
-    "Don’t count the days, make the days count.",
-    "You are a work in progress, and that’s okay.",
-    "The struggle you’re in today is developing the strength you need for tomorrow.",
-    "You have survived 100% of your worst days.",
-    "Your journey is unique, embrace it.",
-    "You are stronger than your excuses.",
-    "Let your courage be bigger than your fear.",
-    "You are making progress, even if it’s hard to see.",
-    "Every step forward is a step away from your old life.",
-    "You are building a new future, one day at a time.",
-    "Your strength is greater than any struggle.",
-    "You are not alone; others have walked this path before you.",
-    "You are worthy of a life free from addiction.",
-    "The best project you’ll ever work on is you.",
-    "You are not your worst mistake.",
-    "You are allowed to be both a masterpiece and a work in progress.",
-    "You are enough, just as you are.",
-    "You are rewriting your story every day.",
-    "You are not powerless.",
-    "You are creating a life you love.",
-    "You are more resilient than you realize.",
-    "You are choosing hope over fear.",
-    "You are making a difference in your own life.",
-    "You are learning to love yourself again.",
-    "You are breaking the cycle.",
-    "You are finding your strength.",
-    "You are discovering your true self.",
-    "You are taking control of your life.",
-    "You are building a brighter future.",
-    "You are healing, even when it feels hard.",
-    "You are growing through what you’re going through.",
-    "You are becoming the person you want to be.",
-    "You are enough, and you always have been."
+val SOBRIETY_QUOTES: Map<Int, List<String>> = mapOf(
+    // 0 - 1 day: The Beginning
+    0 to listOf(
+        "The journey of a thousand miles begins with a single step.",
+        "Your future self will thank you for starting today.",
+        "Today is the first day of the rest of your life."
+    ),
+    // 1 - 7 days: The First Week
+    1 to listOf(
+        "One day at a time. You've already proven you can start.",
+        "Focus on making it through today. Tomorrow will take care of itself.",
+        "The first few days are the hardest. Stay strong."
+    ),
+    // 7 - 30 days: Building Momentum
+    7 to listOf(
+        "A week down! You're rewriting your habits.",
+        "Small wins lead to big victories. Keep stacking those days.",
+        "Your body is starting to heal. Feel the clarity returning."
+    ),
+    // 30 - 60 days: THE CRITICAL ZONE (Super Motivating)
+    30 to listOf(
+        "30 days is a massive milestone, but don't let your guard down now!",
+        "This is where the real transformation happens. Push through the urge to settle.",
+        "You've survived the first month. Now you're building a new identity.",
+        "Don't trade what you want most for what you want in the moment.",
+        "The 'pink cloud' might fade, but your strength is growing. Keep grinding for that 100-day gold!"
+    ),
+    // 60 - 100 days: The Home Stretch to Gold
+    60 to listOf(
+        "You are more than halfway to the 100-day Gold medal!",
+        "Discipline is choosing between what you want now and what you want most.",
+        "Success is the sum of small efforts repeated day in and day out."
+    ),
+    // 100 - 365 days: The Long Road
+    100 to listOf(
+        "Triple digits! You are an inspiration.",
+        "Sobriety isn't just about not drinking; it's about living a life you don't need to escape.",
+        "Keep going until your 'old life' feels like a distant memory."
+    ),
+    // 1 year - 3 years: Mastery
+    365 to listOf(
+        "One whole year of freedom. Look how far you've come.",
+        "You've proven this is a lifestyle, not just a challenge.",
+        "The 3-year Diamond is on the horizon. Keep leading by example."
+    ),
+    // 3 years+: Legacy
+    1095 to listOf(
+        "Diamond status achieved. You are a master of your own destiny.",
+        "The best version of you is here to stay.",
+        "Helping others is the best way to keep what you have."
+    )
 )
+
+/**
+ * Helper function to get a random quote based on the current streak
+ */
+fun getQuoteForDay(days: Int): String {
+    // Find the highest key that is less than or equal to current days
+    val applicableKey = SOBRIETY_QUOTES.keys
+        .filter { it <= days }
+        .maxOrNull() ?: 0
+
+    val quotes = SOBRIETY_QUOTES[applicableKey] ?: listOf("Keep going!")
+    return quotes.random()
+}

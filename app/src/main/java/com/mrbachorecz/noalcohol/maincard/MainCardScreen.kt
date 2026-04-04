@@ -34,6 +34,7 @@ import com.mrbachorecz.noalcohol.healthimpact.HEALTH_IMPACTS
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.medals.MEDALS
 import com.mrbachorecz.noalcohol.medals.MedalIcon
+import getQuoteForDay
 import java.util.Calendar
 import kotlin.math.roundToInt
 
@@ -90,7 +91,8 @@ fun MainCardScreen(
             greetings.random()
         }
     }
-    val randomQuote = remember { sobrietyQuotes.random() }
+    val numberOfDays = calculateDaysPassed(storedDate)
+    val randomQuote = remember { getQuoteForDay(numberOfDays) }
 
     if (storedDate.isNotEmpty()) {
         Scaffold(
@@ -168,7 +170,7 @@ fun MainCardScreen(
                         horizontalArrangement = Arrangement.SpaceAround // This will place cards with space around them
                     ) {
                         // Left Card
-                        val numberOfDays = calculateDaysPassed(storedDate)
+
                         Box(
                             modifier = Modifier
                                 .weight(1f) // Each card takes equal space
