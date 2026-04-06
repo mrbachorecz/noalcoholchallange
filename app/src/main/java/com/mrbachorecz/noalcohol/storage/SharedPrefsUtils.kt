@@ -2,8 +2,13 @@ package com.mrbachorecz.noalcohol.storage
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.activity.result.launch
 import androidx.core.content.edit
+import androidx.glance.appwidget.updateAll
 import com.mrbachorecz.noalcohol.theme.ThemeSetting
+import com.mrbachorecz.noalcohol.widget.DaysCounterWidget
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 private const val PREFS_NAME = "app_prefs"
 private const val STORED_DATE_KEY = "storedDate"
@@ -22,7 +27,7 @@ fun readLastDrinkingDate(context: Context): String {
 
 fun writeLastDrinkingDate(context: Context, value: String) {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    prefs.edit { putString(STORED_DATE_KEY, value) }
+    prefs.edit(commit = true) { putString(STORED_DATE_KEY, value) }
 }
 
 fun readNotificationAllowed(context: Context): Boolean {

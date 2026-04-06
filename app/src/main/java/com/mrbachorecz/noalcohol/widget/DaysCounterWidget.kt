@@ -1,5 +1,6 @@
 package com.mrbachorecz.noalcohol.widget
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -21,9 +22,19 @@ import androidx.glance.appwidget.cornerRadius
 import com.mrbachorecz.noalcohol.InitActivity
 
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.updateAll
 import androidx.glance.unit.ColorProvider
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
+
+class DailyWidgetWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        DaysCounterWidget().updateAll(applicationContext)
+        return Result.success()
+    }
+}
 
 class DaysCounterWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = DaysCounterWidget()
