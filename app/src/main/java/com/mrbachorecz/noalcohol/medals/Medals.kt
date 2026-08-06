@@ -33,7 +33,7 @@ val MEDALS: Map<Int, MedalInfo> = mapOf(
     30 to MedalInfo(Silver, "1 month", "silver"),
     100 to MedalInfo(Gold, "100 days", "gold"),
     365 to MedalInfo(Platinum, "1 year", "platinum"),
-    1095 to MedalInfo(Diamond, "3 years", "diamond"),
+    1000 to MedalInfo(Diamond, "1000 days", "diamond"),
 )
 
 data class MedalInfo(

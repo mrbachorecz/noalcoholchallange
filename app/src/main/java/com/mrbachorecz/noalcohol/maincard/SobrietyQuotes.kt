@@ -37,14 +37,14 @@ val SOBRIETY_QUOTES: Map<Int, List<String>> = mapOf(
         "Sobriety isn't just about not drinking; it's about living a life you don't need to escape.",
         "Keep going until your 'old life' feels like a distant memory."
     ),
-    // 1 year - 3 years: Mastery
+    // 1 year - 1000 days: Mastery
     365 to listOf(
         "One whole year of freedom. Look how far you've come.",
         "You've proven this is a lifestyle, not just a challenge.",
-        "The 3-year Diamond is on the horizon. Keep leading by example."
+        "The 1000-days Diamond is on the horizon. Keep leading by example."
     ),
-    // 3 years+: Legacy
-    1095 to listOf(
+    // 1000 days+: Legacy
+    1000 to listOf(
         "Diamond status achieved. You are a master of your own destiny.",
         "The best version of you is here to stay.",
         "Helping others is the best way to keep what you have."
