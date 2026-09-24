@@ -11,13 +11,18 @@ import com.mrbachorecz.noalcohol.InitActivity
 import com.mrbachorecz.noalcohol.R
 import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassedMessage
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
+import com.mrbachorecz.noalcohol.storage.readNotificationAllowed
+import com.mrbachorecz.noalcohol.storage.readNotificationHours
+import com.mrbachorecz.noalcohol.storage.readNotificationMinutes
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
+        if (!readNotificationAllowed(context)) return
+        if (!NotificationPermissionUtils.hasPostNotificationsPermission(context)) return
+
         val channelId = "daily_notification_channel"
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
 
         val channel = NotificationChannel(
             channelId,
@@ -38,7 +43,7 @@ class NotificationReceiver : BroadcastReceiver() {
         )
 
         val notification = NotificationCompat.Builder(context, channelId)
-            .setContentTitle("Congratulation 🎉")
+            .setContentTitle("Congratulations 🎉")
             .setContentText(daysPassed)
             .setSmallIcon(R.drawable.small_notification_icon)
             .setAutoCancel(true)
@@ -46,5 +51,12 @@ class NotificationReceiver : BroadcastReceiver() {
             .build()
 
         notificationManager.notify(1, notification)
+
+        // One-shot alarms must be re-armed for the next day.
+        NotificationScheduler.scheduleDailyNotification(
+            context,
+            readNotificationHours(context),
+            readNotificationMinutes(context)
+        )
     }
 }

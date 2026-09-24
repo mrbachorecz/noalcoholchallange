@@ -59,13 +59,13 @@ fun SettingsScreen(
         },
         bottomBar = {
             BottomSubmitButton(text = "Save", onSubmit = {
+                // Activity finishes when ready (immediately, or after permission result).
                 onSave(
                     allowNotification.value,
                     selectedHour.intValue,
                     selectedMinute.intValue,
                     currentThemeSetting.value
                 )
-                onClose()
             })
         },
         containerColor = MaterialTheme.colorScheme.background

@@ -1,14 +1,16 @@
 package com.mrbachorecz.noalcohol
 
 import android.app.Application
-import com.mrbachorecz.noalcohol.storage.readThemeSetting // Your storage function
+import com.mrbachorecz.noalcohol.notifications.NotificationScheduler
+import com.mrbachorecz.noalcohol.storage.readThemeSetting
 import com.mrbachorecz.noalcohol.theme.ThemeManager
 
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        // Initialize ThemeManager with the saved theme
-        val savedTheme = readThemeSetting(applicationContext) // Ensure this returns ThemeSetting
+        val savedTheme = readThemeSetting(applicationContext)
         ThemeManager.updateTheme(savedTheme)
+        // Alarms may have been lost (Doze, force-stop, etc.); re-arm if the user opted in.
+        NotificationScheduler.rescheduleIfEnabled(applicationContext)
     }
 }

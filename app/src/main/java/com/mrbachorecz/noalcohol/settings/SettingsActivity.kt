@@ -18,10 +18,27 @@ import com.mrbachorecz.noalcohol.storage.writeThemeSetting
 import com.mrbachorecz.noalcohol.theme.UITheme
 
 class SettingsActivity : ComponentActivity() {
+
+    private var pendingHour: Int = 18
+    private var pendingMinute: Int = 0
+    private var awaitingPermissionForEnable: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val requestPermissionLauncher =
-            NotificationPermissionUtils.createRequestPermissionLauncher(this) { isGranted -> }
+            NotificationPermissionUtils.createRequestPermissionLauncher(this) { isGranted ->
+                if (!awaitingPermissionForEnable) return@createRequestPermissionLauncher
+                awaitingPermissionForEnable = false
+                if (isGranted) {
+                    enableNotifications(pendingHour, pendingMinute)
+                } else {
+                    writeNotificationAllowed(this, false)
+                    NotificationScheduler.cancelDailyNotification(this)
+                }
+                finish()
+            }
+
         setContent {
             UITheme {
                 val context = LocalContext.current
@@ -35,27 +52,39 @@ class SettingsActivity : ComponentActivity() {
                             finish()
                         },
                         onSave = { allowNotification, selectedHour, selectedMinute, selectedTheme ->
-                            writeNotificationAllowed(context, allowNotification)
                             writeNotificationHours(context, selectedHour)
                             writeNotificationMinutes(context, selectedMinute)
                             writeThemeSetting(context, selectedTheme)
-                            if (allowNotification) {
+
+                            if (!allowNotification) {
+                                writeNotificationAllowed(context, false)
+                                NotificationScheduler.cancelDailyNotification(context)
+                                finish()
+                                return@SettingsScreen
+                            }
+
+                            pendingHour = selectedHour
+                            pendingMinute = selectedMinute
+
+                            if (NotificationPermissionUtils.hasPostNotificationsPermission(context)) {
+                                enableNotifications(selectedHour, selectedMinute)
+                                finish()
+                            } else {
+                                awaitingPermissionForEnable = true
                                 NotificationPermissionUtils.checkAndRequestNotificationPermission(
                                     this@SettingsActivity,
                                     requestPermissionLauncher
                                 )
-                                NotificationScheduler.scheduleDailyNotification(
-                                    context,
-                                    selectedHour,
-                                    selectedMinute
-                                )
-                            } else {
-                                NotificationScheduler.cancelDailyNotification(context)
                             }
                         }
                     )
                 }
             }
         }
+    }
+
+    private fun enableNotifications(hour: Int, minute: Int) {
+        writeNotificationAllowed(this, true)
+        NotificationScheduler.scheduleDailyNotification(this, hour, minute)
     }
 }

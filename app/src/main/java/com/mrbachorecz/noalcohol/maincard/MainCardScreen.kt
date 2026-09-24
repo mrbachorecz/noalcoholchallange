@@ -12,16 +12,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -31,7 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.healthimpact.HEALTH_IMPACTS
-import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.medals.MEDALS
 import com.mrbachorecz.noalcohol.medals.MedalIcon
 import getQuoteForDay
@@ -67,12 +71,15 @@ val topAppBarHeight = 64.dp
 @Composable
 fun MainCardScreen(
     storedDate: String,
+    numberOfDays: Int,
     maxMedal: Int,
     onReset: () -> Unit,
     onMedalsClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onBestMedalsClick: () -> Unit,
 ) {
+    var showResetDialog by remember { mutableStateOf(false) }
+    val requestReset = { showResetDialog = true }
 
     val calendar = remember { Calendar.getInstance() }
     val month = calendar.get(Calendar.MONTH)
@@ -80,7 +87,6 @@ fun MainCardScreen(
 
     val isChristmas = month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26)
     val isNewYear = month == Calendar.JANUARY && day == 1
-
 
     val randomGreeting = remember {
         if (isNewYear) {
@@ -91,8 +97,35 @@ fun MainCardScreen(
             greetings.random()
         }
     }
-    val numberOfDays = calculateDaysPassed(storedDate)
-    val randomQuote = remember { getQuoteForDay(numberOfDays) }
+    val randomQuote = remember(numberOfDays) { getQuoteForDay(numberOfDays) }
+
+    if (showResetDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetDialog = false },
+            title = { Text("Reset streak?") },
+            text = {
+                Text(
+                    "This will clear your current progress and ask you to set a new last-drink date. " +
+                        "Your best medal ever will be kept."
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showResetDialog = false
+                        onReset()
+                    }
+                ) {
+                    Text("Reset")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 
     if (storedDate.isNotEmpty()) {
         Scaffold(
@@ -110,7 +143,7 @@ fun MainCardScreen(
                         )
                     },
                     navigationIcon = {
-                        MainHamburgerMenu(onMedalsClick, onSettingsClick, onReset)
+                        MainHamburgerMenu(onMedalsClick, onSettingsClick, requestReset)
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent
@@ -118,9 +151,7 @@ fun MainCardScreen(
                     actions = {}
                 )
             },
-            bottomBar = {
-                //BottomSubmitButton(text = "Reset", onSubmit = onReset)
-            },
+            bottomBar = {},
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ) { innerPadding ->
             val availableScreenHeight =
@@ -132,8 +163,6 @@ fun MainCardScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                val daysPassed = calculateDaysPassed(storedDate)
-
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top,
@@ -141,10 +170,10 @@ fun MainCardScreen(
                 ) {
                     Row(modifier = Modifier.padding(top = 24.dp)) {
                         ElevatedCardWithContent(
-                            text = "$daysPassed",
-                            unit = if (daysPassed == 1) "DAY" else "DAYS",
+                            text = "$numberOfDays",
+                            unit = if (numberOfDays == 1) "DAY" else "DAYS",
                             circleSize = circleSize,
-                            onLongPress = onReset // Pass the onReset lambda here
+                            onLongPress = requestReset
                         )
                     }
                     Row(modifier = Modifier.padding(top = 32.dp)) {
@@ -158,7 +187,6 @@ fun MainCardScreen(
                             textAlign = TextAlign.Center
                         )
                     }
-                    // Add the two rectangular cards here
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -166,14 +194,12 @@ fun MainCardScreen(
                                 top = 32.dp,
                                 start = 16.dp,
                                 end = 16.dp
-                            ), // Add padding as needed
-                        horizontalArrangement = Arrangement.SpaceAround // This will place cards with space around them
+                            ),
+                        horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        // Left Card
-
                         Box(
                             modifier = Modifier
-                                .weight(1f) // Each card takes equal space
+                                .weight(1f)
                                 .padding(end = 8.dp)
                         ) {
                             val sortedMedals =
@@ -195,7 +221,7 @@ fun MainCardScreen(
                                 Column(
                                     modifier = Modifier
                                         .padding(16.dp)
-                                        .fillMaxWidth(), // Add padding inside the card
+                                        .fillMaxWidth(),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Text(
@@ -215,30 +241,28 @@ fun MainCardScreen(
                                     } else {
                                         Text("Welcome at Start")
                                     }
-                                    // Add more content as needed
                                 }
                             }
                             if (actionNeeded) {
                                 Canvas(
                                     modifier = Modifier
-                                        .size(5.dp) // Size of the red dot
-                                        .align(Alignment.TopEnd) // Align to top-right of the Box
-                                        .offset(x = (-8).dp, y = 8.dp) // Adjust position slightly
+                                        .size(5.dp)
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = (-8).dp, y = 8.dp)
                                 ) {
                                     drawCircle(color = redColor)
                                 }
                             }
                         }
 
-                        // Right Card
                         Card(
                             modifier = Modifier
-                                .weight(1f) // Each card takes equal space
-                                .padding(start = 8.dp), // Add padding between cards
-                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Optional: Add elevation
+                                .weight(1f)
+                                .padding(start = 8.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
                             Column(
-                                modifier = Modifier.padding(16.dp), // Add padding inside the card
+                                modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text("Health impact", style = MaterialTheme.typography.titleMedium)
@@ -246,16 +270,18 @@ fun MainCardScreen(
                                     val sortedImpacts =
                                         HEALTH_IMPACTS.toList().sortedBy { (days, _) -> days }
                                     val currentImpact =
-                                        sortedImpacts.lastOrNull { numberOfDays >= it.first }?.second!!
-                                    Text(
-                                        "After ${currentImpact.title}",
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                    for (impact in currentImpact.impacts) {
+                                        sortedImpacts.lastOrNull { numberOfDays >= it.first }?.second
+                                    if (currentImpact != null) {
                                         Text(
-                                            "- $impact",
-                                            style = MaterialTheme.typography.bodyMedium
+                                            "After ${currentImpact.title}",
+                                            style = MaterialTheme.typography.titleMedium
                                         )
+                                        for (impact in currentImpact.impacts) {
+                                            Text(
+                                                "- $impact",
+                                                style = MaterialTheme.typography.bodyMedium
+                                            )
+                                        }
                                     }
                                 } else {
                                     Text("Welcome at Start, wait at least 24 hours")
