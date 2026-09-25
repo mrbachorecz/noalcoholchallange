@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol.maincard
+package com.mrbachorecz.noalcohol.shared
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -19,9 +19,7 @@ object DaysCalculator {
         return calculateDaysSinceThen(startDate)
     }
 
-    /**
-     * Returns a valid ISO local date, or null if missing/corrupt.
-     */
+    /** Returns a valid ISO local date, or null if missing/corrupt. */
     fun parseStoredDate(storedDate: String): LocalDate? {
         if (storedDate.isBlank()) return null
         return try {

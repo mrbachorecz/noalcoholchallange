@@ -26,7 +26,7 @@ import androidx.glance.appwidget.updateAll
 import androidx.glance.unit.ColorProvider
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
+import com.mrbachorecz.noalcohol.shared.DaysCalculator.calculateDaysPassed
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 
 class DailyWidgetWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shown in the add-tile picker; match the live blue circle + white curves. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="400dp"
+    android:viewportWidth="400"
+    android:viewportHeight="400">
+    <path
+        android:fillColor="#121212"
+        android:pathData="M0,0h400v400h-400z" />
+    <!-- Blue circle (phone primary) -->
+    <path
+        android:fillColor="#335889"
+        android:pathData="M200,60a140,140 0 1,1 0,280a140,140 0 1,1 0,-280z" />
+    <!-- White decorative curves (scaled from days_circle_bg) -->
+    <path
+        android:pathData="M152.1,68.4 C204.6,95.1 256.4,111.5 307.2,109.9"
+        android:strokeWidth="10"
+        android:strokeColor="#73FFFFFF"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M152.1,331.6 C204.6,304.9 256.4,288.5 307.2,290.1"
+        android:strokeWidth="10"
+        android:strokeColor="#73FFFFFF"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round" />
+</vector>

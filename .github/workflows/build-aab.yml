@@ -33,26 +33,36 @@ jobs:
       - name: UT
         run: ./gradlew testDebugUnitTest
 
-      - name: Build signed AAB
-        run: ./gradlew bundleRelease
+      - name: Build signed AABs
+        run: ./gradlew :app:bundleRelease :wear:bundleRelease
 
       - name: Get short git hash
         id: githash
         run: echo "GITHASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Set version environment variable
-        id: setversionname
-        run: echo "VERSION_NAME=1.0.18" >> $GITHUB_ENV
+      - name: Set version environment variables
+        run: |
+          echo "VERSION_NAME=1.0.18" >> $GITHUB_ENV
+          echo "WEAR_VERSION_NAME=1.0.0" >> $GITHUB_ENV
 
-      - name: Set AAB filename environment variable
-        id: setaabfilename
-        run: echo "AAB_FILENAME=noalcohol-${GITHASH}-${VERSION_NAME}.aab" >> $GITHUB_ENV
+      - name: Set AAB filename environment variables
+        run: |
+          echo "AAB_FILENAME=noalcohol-${GITHASH}-${VERSION_NAME}.aab" >> $GITHUB_ENV
+          echo "WEAR_AAB_FILENAME=noalcohol-wear-${GITHASH}-${WEAR_VERSION_NAME}.aab" >> $GITHUB_ENV
 
-      - name: Rename AAB for upload
-        run: mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/${{ env.AAB_FILENAME }}
+      - name: Rename AABs for upload
+        run: |
+          mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/${{ env.AAB_FILENAME }}
+          mv wear/build/outputs/bundle/release/wear-release.aab wear/build/outputs/bundle/release/${{ env.WEAR_AAB_FILENAME }}
 
-      - name: Upload AAB artifact
+      - name: Upload phone AAB artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.AAB_FILENAME }}
           path: app/build/outputs/bundle/release/${{ env.AAB_FILENAME }}
+
+      - name: Upload wear AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.WEAR_AAB_FILENAME }}
+          path: wear/build/outputs/bundle/release/${{ env.WEAR_AAB_FILENAME }}

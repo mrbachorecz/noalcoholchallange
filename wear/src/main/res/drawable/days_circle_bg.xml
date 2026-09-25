@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Blue circle + white decorative curves matching the phone main-screen day counter. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <path
+        android:fillColor="#335889"
+        android:pathData="M100,0A100,100 0 1,1 99.999,0Z" />
+    <!-- Top curve -->
+    <path
+        android:pathData="M65.8,6.0 C103.3,25.1 140.3,36.8 176.6,35.7"
+        android:strokeWidth="7"
+        android:strokeColor="#73FFFFFF"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round" />
+    <!-- Bottom mirrored curve (same geometry as phone CurvesOnTheCircle) -->
+    <path
+        android:pathData="M9.4,142.3 C44.7,150.7 83.8,173.2 108.7,199.6"
+        android:strokeWidth="7"
+        android:strokeColor="#73FFFFFF"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round" />
+</vector>

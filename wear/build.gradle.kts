@@ -5,22 +5,20 @@ plugins {
 }
 
 android {
-    namespace = "com.mrbachorecz.noalcohol"
+    namespace = "com.mrbachorecz.noalcohol.wear"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.mrbachorecz.noalcohol"
-        minSdk = 29
+        applicationId = "com.mrbachorecz.noalcohol.wear"
+        minSdk = 30
         targetSdk = 36
-        versionCode = 20
-        versionName = "1.0.19"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        versionCode = 1
+        versionName = "1.0.0"
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file("my-release-key.jks")
+            storeFile = rootProject.file("app/my-release-key.jks")
             storePassword = System.getenv("KEYSTORE_PASSWORD")
             keyAlias = System.getenv("KEY_ALIAS")
             keyPassword = System.getenv("KEY_PASSWORD")
@@ -53,24 +51,18 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.fragment.ktx)
-    implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.gmsWearable)
     implementation(libs.coroutinesPlayServices)
+    implementation(libs.androidx.wear.compose.material)
+    implementation(libs.androidx.wear.compose.foundation)
+    implementation(libs.androidx.wear.tiles)
+    implementation(libs.androidx.wear.protolayout)
+    implementation(libs.androidx.wear.protolayout.material)
+    implementation(libs.wearRemoteInteractions)
+    implementation(libs.guava)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 }

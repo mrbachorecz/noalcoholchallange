@@ -28,6 +28,7 @@ fun readLastDrinkingDate(context: Context): String {
 fun writeLastDrinkingDate(context: Context, value: String) {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     prefs.edit(commit = true) { putString(STORED_DATE_KEY, value) }
+    com.mrbachorecz.noalcohol.sync.WearSync.syncLastDrinkingDate(context, value)
 }
 
 fun readNotificationAllowed(context: Context): Boolean {

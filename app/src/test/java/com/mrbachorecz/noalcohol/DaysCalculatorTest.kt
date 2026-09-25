@@ -1,8 +1,8 @@
 package com.mrbachorecz.noalcohol
 
-import com.mrbachorecz.noalcohol.maincard.DaysCalculator
-import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassed
-import com.mrbachorecz.noalcohol.maincard.DaysCalculator.calculateDaysPassedMessage
+import com.mrbachorecz.noalcohol.shared.DaysCalculator
+import com.mrbachorecz.noalcohol.shared.DaysCalculator.calculateDaysPassed
+import com.mrbachorecz.noalcohol.shared.DaysCalculator.calculateDaysPassedMessage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

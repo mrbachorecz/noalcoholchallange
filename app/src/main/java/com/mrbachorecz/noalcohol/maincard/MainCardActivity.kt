@@ -20,6 +20,7 @@ import com.mrbachorecz.noalcohol.InitActivity
 import com.mrbachorecz.noalcohol.initialdate.DatePickerActivity
 import com.mrbachorecz.noalcohol.medals.MedalsActivity
 import com.mrbachorecz.noalcohol.settings.SettingsActivity
+import com.mrbachorecz.noalcohol.shared.DaysCalculator
 import com.mrbachorecz.noalcohol.storage.readBestMedalEver
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import com.mrbachorecz.noalcohol.storage.writeBestMedalEver
@@ -41,6 +42,7 @@ class MainCardActivity : ComponentActivity() {
         super.onResume()
         if (!refreshMainState()) return
         refreshWidget()
+        com.mrbachorecz.noalcohol.sync.WearSync.syncLastDrinkingDate(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
