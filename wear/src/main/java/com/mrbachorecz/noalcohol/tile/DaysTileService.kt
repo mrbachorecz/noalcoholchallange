@@ -23,9 +23,9 @@ import androidx.wear.tiles.TileBuilders
 import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import com.mrbachorecz.noalcohol.shared.DaysCalculator
 import com.mrbachorecz.noalcohol.MainActivity
 import com.mrbachorecz.noalcohol.R
+import com.mrbachorecz.noalcohol.shared.DaysCalculator
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import java.util.concurrent.TimeUnit
 
@@ -103,7 +103,6 @@ class DaysTileService : TileService() {
 
     private fun daysCircleLayout(days: Int): LayoutElementBuilders.LayoutElement {
         val unit = if (days == 1) "DAY" else "DAYS"
-        val circleSize = dp(140f)
         return Box.Builder()
             .setWidth(expand())
             .setHeight(expand())
@@ -115,42 +114,34 @@ class DaysTileService : TileService() {
                     .build()
             )
             .addContent(
-                Box.Builder()
-                    .setWidth(circleSize)
-                    .setHeight(circleSize)
+                Image.Builder()
+                    .setResourceId(CIRCLE_BG_ID)
+                    .setWidth(expand())
+                    .setHeight(expand())
+                    .build()
+            )
+            .addContent(
+                Column.Builder()
                     .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
-                    .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
                     .addContent(
-                        Image.Builder()
-                            .setResourceId(CIRCLE_BG_ID)
-                            .setWidth(circleSize)
-                            .setHeight(circleSize)
+                        Text.Builder()
+                            .setText(days.toString())
+                            .setFontStyle(
+                                FontStyle.Builder()
+                                    .setSize(sp(48f))
+                                    .setWeight(LayoutElementBuilders.FONT_WEIGHT_BOLD)
+                                    .setColor(argb(0xFFFFFFFF.toInt()))
+                                    .build()
+                            )
                             .build()
                     )
                     .addContent(
-                        Column.Builder()
-                            .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
-                            .addContent(
-                                Text.Builder()
-                                    .setText(days.toString())
-                                    .setFontStyle(
-                                        FontStyle.Builder()
-                                            .setSize(sp(42f))
-                                            .setWeight(LayoutElementBuilders.FONT_WEIGHT_BOLD)
-                                            .setColor(argb(0xFFFFFFFF.toInt()))
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .addContent(
-                                Text.Builder()
-                                    .setText(unit)
-                                    .setFontStyle(
-                                        FontStyle.Builder()
-                                            .setSize(sp(14f))
-                                            .setColor(argb(0xE6FFFFFF.toInt()))
-                                            .build()
-                                    )
+                        Text.Builder()
+                            .setText(unit)
+                            .setFontStyle(
+                                FontStyle.Builder()
+                                    .setSize(sp(16f))
+                                    .setColor(argb(0xE6FFFFFF.toInt()))
                                     .build()
                             )
                             .build()
@@ -194,7 +185,7 @@ class DaysTileService : TileService() {
     }
 
     companion object {
-        private const val RESOURCES_VERSION = "3"
+        private const val RESOURCES_VERSION = "4"
         private const val CIRCLE_BG_ID = "days_circle_bg"
     }
 }

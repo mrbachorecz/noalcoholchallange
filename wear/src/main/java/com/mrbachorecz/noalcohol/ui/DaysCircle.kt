@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -16,11 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Text
 import kotlin.math.cos
+import kotlin.math.min
 import kotlin.math.sin
 
 /** Phone-app primary circle blue. */
@@ -29,35 +30,40 @@ val DaysCircleBlue = Color(0xFF335889)
 @Composable
 fun DaysCircle(
     days: Int,
-    modifier: Modifier = Modifier,
-    size: Dp = 120.dp
+    modifier: Modifier = Modifier
 ) {
     val unit = if (days == 1) "DAY" else "DAYS"
-    Box(
-        modifier = modifier
-            .size(size)
-            .clip(CircleShape)
-            .background(DaysCircleBlue),
+    BoxWithConstraints(
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CurvesOnTheCircle()
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        val diameter = min(maxWidth.value, maxHeight.value).dp
+        Box(
+            modifier = Modifier
+                .size(diameter)
+                .clip(CircleShape)
+                .background(DaysCircleBlue),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "$days",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Text(
-                text = unit,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Light,
-                color = Color.White
-            )
+            CurvesOnTheCircle()
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "$days",
+                    fontSize = 48.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = unit,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.White
+                )
+            }
         }
     }
 }
@@ -78,6 +84,7 @@ fun CurvesOnTheCircle() {
         val arcSpanDeg = baseArcEndAngleDeg - baseArcStartAngleDeg
         val cpAngularDeviationFromMid = arcSpanDeg / 4f
         val cpRadialPosition = cardRadius * 0.75f
+        val strokeWidth = (cardRadius * 0.035f).coerceAtLeast(4f)
 
         fun point(angleDeg: Float, radius: Float): Pair<Float, Float> {
             val rad = Math.toRadians(angleDeg.toDouble())
@@ -97,7 +104,7 @@ fun CurvesOnTheCircle() {
                 cubicTo(c1X, c1Y, c2X, c2Y, endX, endY)
             },
             color = Color.White.copy(alpha = 0.45f),
-            style = Stroke(width = 7f)
+            style = Stroke(width = strokeWidth)
         )
 
         val mirrorArcStartAngleDeg =
@@ -118,7 +125,7 @@ fun CurvesOnTheCircle() {
                 cubicTo(mirrorC1X, mirrorC1Y, mirrorC2X, mirrorC2Y, mirrorEndX, mirrorEndY)
             },
             color = Color.White.copy(alpha = 0.45f),
-            style = Stroke(width = 7f)
+            style = Stroke(width = strokeWidth)
         )
     }
 }
