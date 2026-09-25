@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.healthimpact.HealthImpactContent
 import com.mrbachorecz.noalcohol.healthimpact.HealthImpactDialog
 import com.mrbachorecz.noalcohol.healthimpact.healthImpactForDays
+import com.mrbachorecz.noalcohol.medals.BestMedalsDialog
 import com.mrbachorecz.noalcohol.medals.MEDALS
 import com.mrbachorecz.noalcohol.medals.MedalIcon
 import getQuoteForDay
@@ -78,10 +79,11 @@ fun MainCardScreen(
     onReset: () -> Unit,
     onMedalsClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onBestMedalsClick: () -> Unit,
+    onConfirmBestMedal: () -> Unit,
 ) {
     var showResetDialog by remember { mutableStateOf(false) }
     var showHealthImpactDialog by remember { mutableStateOf(false) }
+    var showBestMedalsDialog by remember { mutableStateOf(false) }
     val requestReset = { showResetDialog = true }
     val currentHealthImpact = remember(numberOfDays) { healthImpactForDays(numberOfDays) }
 
@@ -135,6 +137,15 @@ fun MainCardScreen(
         HealthImpactDialog(
             impact = currentHealthImpact,
             onDismiss = { showHealthImpactDialog = false }
+        )
+    }
+
+    if (showBestMedalsDialog) {
+        BestMedalsDialog(
+            numberOfDays = numberOfDays,
+            bestMedal = maxMedal,
+            onConfirm = onConfirmBestMedal,
+            onDismiss = { showBestMedalsDialog = false }
         )
     }
 
@@ -225,7 +236,7 @@ fun MainCardScreen(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { onBestMedalsClick() },
+                                    .clickable { showBestMedalsDialog = true },
                                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                                 border = if (actionNeeded) BorderStroke(2.dp, redColor) else null
                             ) {

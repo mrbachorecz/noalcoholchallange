@@ -18,11 +18,11 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.mrbachorecz.noalcohol.InitActivity
 import com.mrbachorecz.noalcohol.initialdate.DatePickerActivity
-import com.mrbachorecz.noalcohol.medals.BestMedalsActivity
 import com.mrbachorecz.noalcohol.medals.MedalsActivity
 import com.mrbachorecz.noalcohol.settings.SettingsActivity
 import com.mrbachorecz.noalcohol.storage.readBestMedalEver
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
+import com.mrbachorecz.noalcohol.storage.writeBestMedalEver
 import com.mrbachorecz.noalcohol.storage.writeLastDrinkingDate
 import com.mrbachorecz.noalcohol.theme.UITheme
 import com.mrbachorecz.noalcohol.widget.DailyWidgetWorker
@@ -71,9 +71,9 @@ class MainCardActivity : ComponentActivity() {
                             val intent = Intent(context, SettingsActivity::class.java)
                             context.startActivity(intent)
                         },
-                        onBestMedalsClick = {
-                            val intent = Intent(context, BestMedalsActivity::class.java)
-                            context.startActivity(intent)
+                        onConfirmBestMedal = {
+                            writeBestMedalEver(this@MainCardActivity, daysPassedState)
+                            maxMedalState = daysPassedState
                         }
                     )
                 }
