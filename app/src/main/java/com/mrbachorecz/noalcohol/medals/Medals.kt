@@ -2,9 +2,13 @@ package com.mrbachorecz.noalcohol.medals
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -16,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mrbachorecz.noalcohol.theme.ThemeManager
@@ -69,37 +74,69 @@ fun MedalIcon(medal: MedalInfo, iconSize: Dp = 32.dp) {
 
 @Composable
 fun CurrentAndNextMessage(current: MedalInfo?, next: MedalInfo?) {
-    when {
-        current == null && next != null -> Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                "Next medal: ${next.message} ",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-            MedalIcon(next)
-        }
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        when {
+            current == null && next == null -> {
+                Text(
+                    text = "No medals earned yet.",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
 
-        current != null && next == null -> Text("All medals earned!!!")
-        current != null && next != null -> Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                "Current: ",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-            MedalIcon(current)
-            Text(
-                ", next: ${next.message} ",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-            MedalIcon(next)
-            Text(
-                ".",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-        }
+            current != null && next == null -> {
+                MedalStatusRow(label = "Current", medal = current)
+                Text(
+                    text = "All medals earned!",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center
+                )
+            }
 
-        else -> Text("No medals earned yet.")
+            else -> {
+                if (current != null) {
+                    MedalStatusRow(label = "Current", medal = current)
+                }
+                if (next != null) {
+                    MedalStatusRow(label = "Next", medal = next)
+                }
+            }
+        }
     }
 }
+
+@Composable
+private fun MedalStatusRow(label: String, medal: MedalInfo) {
+    val iconColumnWidth = 48.dp
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.width(80.dp)
+        )
+        Box(
+            modifier = Modifier.width(iconColumnWidth),
+            contentAlignment = Alignment.Center
+        ) {
+            MedalIcon(medal, iconSize = 28.dp)
+        }
+        Text(
+            text = medal.message,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp)
+        )
+    }
+}
+
