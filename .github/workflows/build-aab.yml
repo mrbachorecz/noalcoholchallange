@@ -42,8 +42,8 @@ jobs:
 
       - name: Set version environment variables
         run: |
-          echo "VERSION_NAME=1.0.19" >> $GITHUB_ENV
-          echo "WEAR_VERSION_NAME=1.0.19" >> $GITHUB_ENV
+          echo "VERSION_NAME=1.0.20" >> $GITHUB_ENV
+          echo "WEAR_VERSION_NAME=1.0.20" >> $GITHUB_ENV
 
       - name: Set AAB filename environment variables
         run: |
