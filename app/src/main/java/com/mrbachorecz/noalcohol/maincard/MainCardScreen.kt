@@ -35,7 +35,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mrbachorecz.noalcohol.healthimpact.HEALTH_IMPACTS
+import com.mrbachorecz.noalcohol.healthimpact.HealthImpactContent
+import com.mrbachorecz.noalcohol.healthimpact.HealthImpactDialog
+import com.mrbachorecz.noalcohol.healthimpact.healthImpactForDays
 import com.mrbachorecz.noalcohol.medals.MEDALS
 import com.mrbachorecz.noalcohol.medals.MedalIcon
 import getQuoteForDay
@@ -79,7 +81,9 @@ fun MainCardScreen(
     onBestMedalsClick: () -> Unit,
 ) {
     var showResetDialog by remember { mutableStateOf(false) }
+    var showHealthImpactDialog by remember { mutableStateOf(false) }
     val requestReset = { showResetDialog = true }
+    val currentHealthImpact = remember(numberOfDays) { healthImpactForDays(numberOfDays) }
 
     val calendar = remember { Calendar.getInstance() }
     val month = calendar.get(Calendar.MONTH)
@@ -124,6 +128,13 @@ fun MainCardScreen(
                     Text("Cancel")
                 }
             }
+        )
+    }
+
+    if (showHealthImpactDialog) {
+        HealthImpactDialog(
+            impact = currentHealthImpact,
+            onDismiss = { showHealthImpactDialog = false }
         )
     }
 
@@ -258,35 +269,17 @@ fun MainCardScreen(
                         Card(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(start = 8.dp),
+                                .padding(start = 8.dp)
+                                .clickable { showHealthImpactDialog = true },
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text("Health impact", style = MaterialTheme.typography.titleMedium)
-                                if (numberOfDays > 0) {
-                                    val sortedImpacts =
-                                        HEALTH_IMPACTS.toList().sortedBy { (days, _) -> days }
-                                    val currentImpact =
-                                        sortedImpacts.lastOrNull { numberOfDays >= it.first }?.second
-                                    if (currentImpact != null) {
-                                        Text(
-                                            "After ${currentImpact.title}",
-                                            style = MaterialTheme.typography.titleMedium
-                                        )
-                                        for (impact in currentImpact.impacts) {
-                                            Text(
-                                                "- $impact",
-                                                style = MaterialTheme.typography.bodyMedium
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    Text("Welcome at Start, wait at least 24 hours")
-                                }
-                            }
+                            HealthImpactContent(
+                                impact = currentHealthImpact,
+                                compact = true,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth()
+                            )
                         }
                     }
                 }
