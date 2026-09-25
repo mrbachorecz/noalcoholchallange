@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol.wear.storage
+package com.mrbachorecz.noalcohol.storage
 
 import android.content.Context
 import androidx.core.content.edit

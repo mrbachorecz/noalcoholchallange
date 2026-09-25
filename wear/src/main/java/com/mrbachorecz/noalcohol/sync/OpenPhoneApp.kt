@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol.wear.sync
+package com.mrbachorecz.noalcohol.sync
 
 import android.content.Context
 import android.content.Intent
@@ -14,7 +14,7 @@ object OpenPhoneApp {
     fun launch(context: Context) {
         val intent = Intent(Intent.ACTION_MAIN)
             .addCategory(Intent.CATEGORY_LAUNCHER)
-            .setPackage(WearSyncContract.PHONE_PACKAGE)
+            .setPackage(WearSyncContract.APP_PACKAGE)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         try {

@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol.wear.tile
+package com.mrbachorecz.noalcohol.tile
 
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.ColorBuilders.argb
@@ -24,9 +24,9 @@ import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.mrbachorecz.noalcohol.shared.DaysCalculator
-import com.mrbachorecz.noalcohol.wear.MainActivity
-import com.mrbachorecz.noalcohol.wear.R
-import com.mrbachorecz.noalcohol.wear.storage.readLastDrinkingDate
+import com.mrbachorecz.noalcohol.MainActivity
+import com.mrbachorecz.noalcohol.R
+import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import java.util.concurrent.TimeUnit
 
 class DaysTileService : TileService() {

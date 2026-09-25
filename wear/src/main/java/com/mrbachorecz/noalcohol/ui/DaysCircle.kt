@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol.wear.ui
+package com.mrbachorecz.noalcohol.ui
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background

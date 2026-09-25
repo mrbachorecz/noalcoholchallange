@@ -5,15 +5,17 @@ plugins {
 }
 
 android {
-    namespace = "com.mrbachorecz.noalcohol.wear"
+    namespace = "com.mrbachorecz.noalcohol"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.mrbachorecz.noalcohol.wear"
+        // Same applicationId as the phone app for Play form-factor publishing.
+        // Wear versionCode must stay higher than the phone APK for multi-APK delivery.
+        applicationId = "com.mrbachorecz.noalcohol"
         minSdk = 30
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 1000020
+        versionName = "1.0.19"
     }
 
     signingConfigs {

@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol.wear.sync
+package com.mrbachorecz.noalcohol.sync
 
 import android.content.Context
 import android.util.Log

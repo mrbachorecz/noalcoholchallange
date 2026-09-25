@@ -6,5 +6,6 @@ object WearSyncContract {
     const val KEY_DATE = "date"
     const val CAPABILITY_PHONE = "noalcohol_phone"
     const val CAPABILITY_WEAR = "noalcohol_wear"
-    const val PHONE_PACKAGE = "com.mrbachorecz.noalcohol"
+    /** Shared applicationId for phone and Wear (Play form factor). */
+    const val APP_PACKAGE = "com.mrbachorecz.noalcohol"
 }

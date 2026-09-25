@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol.wear.sync
+package com.mrbachorecz.noalcohol.sync
 
 import android.util.Log
 import androidx.wear.tiles.TileService
@@ -8,8 +8,8 @@ import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import com.mrbachorecz.noalcohol.shared.WearSyncContract
-import com.mrbachorecz.noalcohol.wear.storage.writeLastDrinkingDate
-import com.mrbachorecz.noalcohol.wear.tile.DaysTileService
+import com.mrbachorecz.noalcohol.storage.writeLastDrinkingDate
+import com.mrbachorecz.noalcohol.tile.DaysTileService
 
 class WearDataListenerService : WearableListenerService() {
 

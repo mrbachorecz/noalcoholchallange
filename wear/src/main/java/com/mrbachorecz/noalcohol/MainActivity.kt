@@ -1,4 +1,4 @@
-package com.mrbachorecz.noalcohol.wear
+package com.mrbachorecz.noalcohol
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.mrbachorecz.noalcohol.shared.DaysCalculator
-import com.mrbachorecz.noalcohol.wear.storage.readLastDrinkingDate
-import com.mrbachorecz.noalcohol.wear.sync.OpenPhoneApp
-import com.mrbachorecz.noalcohol.wear.sync.WearSyncRequester
-import com.mrbachorecz.noalcohol.wear.ui.DaysCircle
+import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
+import com.mrbachorecz.noalcohol.sync.OpenPhoneApp
+import com.mrbachorecz.noalcohol.sync.WearSyncRequester
+import com.mrbachorecz.noalcohol.ui.DaysCircle
 
 class MainActivity : ComponentActivity() {
 
