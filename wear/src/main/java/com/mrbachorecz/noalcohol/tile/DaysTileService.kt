@@ -23,8 +23,8 @@ import androidx.wear.tiles.TileBuilders
 import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import com.mrbachorecz.noalcohol.MainActivity
 import com.mrbachorecz.noalcohol.R
+import com.mrbachorecz.noalcohol.WearTileClickActivity
 import com.mrbachorecz.noalcohol.shared.DaysCalculator
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import java.util.concurrent.TimeUnit
@@ -85,14 +85,14 @@ class DaysTileService : TileService() {
         )
     }
 
-    private fun openAppClickable(): Clickable {
+    private fun resetOrInitClickable(): Clickable {
         return Clickable.Builder()
-            .setId("open_app")
+            .setId("reset_or_init")
             .setOnClick(
                 ActionBuilders.LaunchAction.Builder()
                     .setAndroidActivity(
                         ActionBuilders.AndroidActivity.Builder()
-                            .setClassName(MainActivity::class.java.name)
+                            .setClassName(WearTileClickActivity::class.java.name)
                             .setPackageName(packageName)
                             .build()
                     )
@@ -110,7 +110,7 @@ class DaysTileService : TileService() {
             .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
             .setModifiers(
                 Modifiers.Builder()
-                    .setClickable(openAppClickable())
+                    .setClickable(resetOrInitClickable())
                     .build()
             )
             .addContent(
@@ -159,7 +159,7 @@ class DaysTileService : TileService() {
             .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
             .setModifiers(
                 Modifiers.Builder()
-                    .setClickable(openAppClickable())
+                    .setClickable(resetOrInitClickable())
                     .setPadding(
                         Padding.Builder()
                             .setStart(dp(16f))
@@ -170,7 +170,7 @@ class DaysTileService : TileService() {
             )
             .addContent(
                 Text.Builder()
-                    .setText("Tap to open app and sync")
+                    .setText("Tap to set last drink date")
                     .setMaxLines(3)
                     .setMultilineAlignment(LayoutElementBuilders.TEXT_ALIGN_CENTER)
                     .setFontStyle(
@@ -185,7 +185,7 @@ class DaysTileService : TileService() {
     }
 
     companion object {
-        private const val RESOURCES_VERSION = "4"
+        private const val RESOURCES_VERSION = "5"
         private const val CIRCLE_BG_ID = "days_circle_bg"
     }
 }

@@ -3,6 +3,7 @@ package com.mrbachorecz.noalcohol.maincard
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,10 +22,13 @@ import com.mrbachorecz.noalcohol.initialdate.DatePickerActivity
 import com.mrbachorecz.noalcohol.medals.MedalsActivity
 import com.mrbachorecz.noalcohol.settings.SettingsActivity
 import com.mrbachorecz.noalcohol.shared.DaysCalculator
+import com.mrbachorecz.noalcohol.storage.APP_PREFS_NAME
+import com.mrbachorecz.noalcohol.storage.STORED_DATE_KEY
 import com.mrbachorecz.noalcohol.storage.readBestMedalEver
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import com.mrbachorecz.noalcohol.storage.writeBestMedalEver
 import com.mrbachorecz.noalcohol.storage.writeLastDrinkingDate
+import com.mrbachorecz.noalcohol.sync.WearSync
 import com.mrbachorecz.noalcohol.theme.UITheme
 import com.mrbachorecz.noalcohol.widget.DailyWidgetWorker
 import com.mrbachorecz.noalcohol.widget.DaysCounterWidget
@@ -38,11 +42,33 @@ class MainCardActivity : ComponentActivity() {
     private var storedDateState by mutableStateOf("")
     private var daysPassedState by mutableIntStateOf(0)
 
+    private val datePrefsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key != STORED_DATE_KEY) return@OnSharedPreferenceChangeListener
+            runOnUiThread {
+                if (!isFinishing && refreshMainState()) {
+                    refreshWidget()
+                }
+            }
+        }
+
+    override fun onStart() {
+        super.onStart()
+        getSharedPreferences(APP_PREFS_NAME, MODE_PRIVATE)
+            .registerOnSharedPreferenceChangeListener(datePrefsListener)
+    }
+
+    override fun onStop() {
+        getSharedPreferences(APP_PREFS_NAME, MODE_PRIVATE)
+            .unregisterOnSharedPreferenceChangeListener(datePrefsListener)
+        super.onStop()
+    }
+
     override fun onResume() {
         super.onResume()
         if (!refreshMainState()) return
         refreshWidget()
-        com.mrbachorecz.noalcohol.sync.WearSync.syncLastDrinkingDate(this)
+        WearSync.syncLastDrinkingDate(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

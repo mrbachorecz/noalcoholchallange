@@ -4,13 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,21 +13,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
 import com.mrbachorecz.noalcohol.shared.DaysCalculator
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
-import com.mrbachorecz.noalcohol.sync.WearDateReset
 import com.mrbachorecz.noalcohol.sync.WearSyncRequester
 import com.mrbachorecz.noalcohol.ui.DaysCircle
-import com.mrbachorecz.noalcohol.ui.WearDatePickerDialog
-import java.time.LocalDate
+import com.mrbachorecz.noalcohol.ui.WearInitDateScreen
+import com.mrbachorecz.noalcohol.ui.WearResetStreakScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -64,119 +51,30 @@ private fun WearHomeScreen(
     storedDate: String,
     onDateChanged: (String) -> Unit
 ) {
-    val context = LocalContext.current
     val hasDate = DaysCalculator.parseStoredDate(storedDate) != null
     val days = DaysCalculator.calculateDaysPassed(storedDate)
     var showResetDialog by remember { mutableStateOf(false) }
-    var showDatePicker by remember { mutableStateOf(false) }
-    var pickerInitial by remember { mutableStateOf(LocalDate.now()) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         if (!hasDate) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Last drink date",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.title3
-                )
-                Text(
-                    text = "Set when your streak starts",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-                Button(
-                    onClick = {
-                        val iso = WearDateReset.resetToToday(context)
-                        onDateChanged(iso)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                ) {
-                    Text("Today")
-                }
-                Button(
-                    onClick = {
-                        pickerInitial = LocalDate.now()
-                        showDatePicker = true
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Pick date")
-                }
-            }
+            WearInitDateScreen(onDateSet = onDateChanged)
+        } else if (showResetDialog) {
+            WearResetStreakScreen(
+                onDateSet = { iso ->
+                    onDateChanged(iso)
+                    showResetDialog = false
+                },
+                onDismiss = { showResetDialog = false }
+            )
         } else {
             DaysCircle(
                 days = days,
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable { showResetDialog = true }
-            )
-        }
-
-        if (showResetDialog) {
-            Dialog(onDismissRequest = { showResetDialog = false }) {
-                Card(
-                    onClick = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = "Reset streak?",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.title3
-                        )
-                        Button(
-                            onClick = {
-                                val iso = WearDateReset.resetToToday(context)
-                                onDateChanged(iso)
-                                showResetDialog = false
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Today")
-                        }
-                        Button(
-                            onClick = {
-                                showResetDialog = false
-                                pickerInitial = LocalDate.now()
-                                showDatePicker = true
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Pick date")
-                        }
-                    }
-                }
-            }
-        }
-
-        if (showDatePicker) {
-            WearDatePickerDialog(
-                initialDate = pickerInitial,
-                onConfirm = { date ->
-                    val iso = WearDateReset.setLastDrinkDate(context, date)
-                    onDateChanged(iso)
-                    showDatePicker = false
-                },
-                onDismiss = { showDatePicker = false }
             )
         }
     }

@@ -2,7 +2,6 @@ package com.mrbachorecz.noalcohol.sync
 
 import android.content.Context
 import android.util.Log
-import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.mrbachorecz.noalcohol.shared.WearSyncContract
@@ -12,7 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-/** Asks the phone to re-push the last-drink date. */
+/** Asks the phone to re-push the last-drink date (phone is source of truth). */
 object WearSyncRequester {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private const val TAG = "WearSyncRequester"
@@ -21,13 +20,7 @@ object WearSyncRequester {
         val appContext = context.applicationContext
         scope.launch {
             try {
-                val nodes = Wearable.getCapabilityClient(appContext)
-                    .getCapability(
-                        WearSyncContract.CAPABILITY_PHONE,
-                        CapabilityClient.FILTER_REACHABLE
-                    )
-                    .await()
-                    .nodes
+                val nodes = resolvePhoneNodes(appContext)
                 val messageClient: MessageClient = Wearable.getMessageClient(appContext)
                 for (node in nodes) {
                     messageClient.sendMessage(
