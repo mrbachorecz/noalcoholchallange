@@ -14,8 +14,8 @@ android {
         applicationId = "com.mrbachorecz.noalcohol"
         minSdk = 30
         targetSdk = 36
-        versionCode = 1000022
-        versionName = "1.0.21"
+        versionCode = 1000023
+        versionName = "1.0.22"
     }
 
     signingConfigs {
@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.androidx.wear.tiles)
     implementation(libs.androidx.wear.protolayout)
     implementation(libs.androidx.wear.protolayout.material)
-    implementation(libs.wearRemoteInteractions)
     implementation(libs.guava)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

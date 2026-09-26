@@ -19,9 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.wear.compose.material.Button
@@ -30,10 +28,11 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.mrbachorecz.noalcohol.shared.DaysCalculator
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
-import com.mrbachorecz.noalcohol.sync.OpenPhoneApp
 import com.mrbachorecz.noalcohol.sync.WearDateReset
 import com.mrbachorecz.noalcohol.sync.WearSyncRequester
 import com.mrbachorecz.noalcohol.ui.DaysCircle
+import com.mrbachorecz.noalcohol.ui.WearDatePickerDialog
+import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
 
@@ -69,24 +68,53 @@ private fun WearHomeScreen(
     val hasDate = DaysCalculator.parseStoredDate(storedDate) != null
     val days = DaysCalculator.calculateDaysPassed(storedDate)
     var showResetDialog by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var pickerInitial by remember { mutableStateOf(LocalDate.now()) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         if (!hasDate) {
-            Text(
-                text = "Tap to open the phone app and sync your streak.",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body2,
-                textDecoration = TextDecoration.Underline,
-                color = MaterialTheme.colors.primary,
+            Column(
                 modifier = Modifier
-                    .padding(16.dp)
-                    .clickable(role = Role.Button) {
-                        OpenPhoneApp.launch(context)
-                    }
-            )
+                    .fillMaxSize()
+                    .padding(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Last drink date",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.title3
+                )
+                Text(
+                    text = "Set when your streak starts",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+                Button(
+                    onClick = {
+                        val iso = WearDateReset.resetToToday(context)
+                        onDateChanged(iso)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Text("Today")
+                }
+                Button(
+                    onClick = {
+                        pickerInitial = LocalDate.now()
+                        showDatePicker = true
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Pick date")
+                }
+            }
         } else {
             DaysCircle(
                 days = days,
@@ -111,37 +139,45 @@ private fun WearHomeScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Reset for today?",
+                            text = "Reset streak?",
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.title3
                         )
-                        Text(
-                            text = "Sets your streak start to today.",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.body2
-                        )
                         Button(
                             onClick = {
-                                val today = WearDateReset.resetToToday(context)
-                                onDateChanged(today)
+                                val iso = WearDateReset.resetToToday(context)
+                                onDateChanged(iso)
                                 showResetDialog = false
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Yes")
+                            Text("Today")
                         }
                         Button(
                             onClick = {
                                 showResetDialog = false
-                                OpenPhoneApp.launch(context)
+                                pickerInitial = LocalDate.now()
+                                showDatePicker = true
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("No, open on phone", textAlign = TextAlign.Center)
+                            Text("Pick date")
                         }
                     }
                 }
             }
+        }
+
+        if (showDatePicker) {
+            WearDatePickerDialog(
+                initialDate = pickerInitial,
+                onConfirm = { date ->
+                    val iso = WearDateReset.setLastDrinkDate(context, date)
+                    onDateChanged(iso)
+                    showDatePicker = false
+                },
+                onDismiss = { showDatePicker = false }
+            )
         }
     }
 }

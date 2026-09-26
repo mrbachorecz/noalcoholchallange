@@ -16,18 +16,21 @@ import kotlinx.coroutines.tasks.await
 import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 
-/** Writes today's date on the watch and asks the phone to adopt it. */
+/** Saves a last-drink date on the watch and asks the phone to adopt it when paired. */
 object WearDateReset {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private const val TAG = "WearDateReset"
 
-    fun resetToToday(context: Context): String {
-        val today = LocalDate.now().toString()
-        writeLastDrinkingDate(context, today)
+    fun setLastDrinkDate(context: Context, date: LocalDate): String {
+        val clamped = minOf(date, LocalDate.now())
+        val iso = clamped.toString()
+        writeLastDrinkingDate(context, iso)
         TileService.getUpdater(context).requestUpdate(DaysTileService::class.java)
-        pushDateToPhone(context, today)
-        return today
+        pushDateToPhone(context, iso)
+        return iso
     }
+
+    fun resetToToday(context: Context): String = setLastDrinkDate(context, LocalDate.now())
 
     private fun pushDateToPhone(context: Context, isoDate: String) {
         val appContext = context.applicationContext
@@ -50,7 +53,7 @@ object WearDateReset {
                     ).await()
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "Could not push reset date to phone", e)
+                Log.w(TAG, "Could not push date to phone", e)
             }
         }
     }

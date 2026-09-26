@@ -9,6 +9,4 @@ object WearSyncContract {
     const val CAPABILITY_WEAR = "noalcohol_wear"
     /** Shared applicationId for phone and Wear (Play form factor). */
     const val APP_PACKAGE = "com.mrbachorecz.noalcohol"
-    /** Launcher activity on the phone module. */
-    const val PHONE_LAUNCHER_ACTIVITY = "com.mrbachorecz.noalcohol.InitActivity"
 }

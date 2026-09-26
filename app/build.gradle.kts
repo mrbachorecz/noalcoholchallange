@@ -12,8 +12,8 @@ android {
         applicationId = "com.mrbachorecz.noalcohol"
         minSdk = 29
         targetSdk = 36
-        versionCode = 22
-        versionName = "1.0.21"
+        versionCode = 23
+        versionName = "1.0.22"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
