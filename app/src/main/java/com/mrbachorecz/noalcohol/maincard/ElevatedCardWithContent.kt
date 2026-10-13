@@ -43,8 +43,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
 import java.time.LocalDate
+import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
@@ -68,8 +68,8 @@ fun ElevatedCardWithContent(
     }
     val isWinter = currentDate.monthValue == 12 || currentDate.monthValue == 1
     val isNewYear =
-        currentDate.monthValue == 12 && currentDate.dayOfMonth == 31 ||
-            currentDate.monthValue == 1 && currentDate.dayOfMonth == 1
+        (currentDate.monthValue == 12 && currentDate.dayOfMonth == 31) ||
+            (currentDate.monthValue == 1 && currentDate.dayOfMonth == 1)
     val isChristmas =
         currentDate.monthValue == 12 && currentDate.dayOfMonth in 24..26
 
