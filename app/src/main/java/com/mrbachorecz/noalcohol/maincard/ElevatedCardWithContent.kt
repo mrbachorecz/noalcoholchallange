@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
@@ -43,10 +44,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import java.time.LocalDate
 import kotlin.math.cos
 import kotlin.math.sin
-
-import java.util.Calendar
 import kotlin.random.Random
 
 @Composable
@@ -60,19 +60,18 @@ fun ElevatedCardWithContent(
     var progress by remember { mutableFloatStateOf(0f) }
     val animatedProgress by animateFloatAsState(targetValue = progress, label = "ProgressAnimation")
 
-    // Date Checks
-    val calendar = remember { Calendar.getInstance() }
-    val month = calendar.get(Calendar.MONTH)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-    val isWinter = month == Calendar.DECEMBER || month == Calendar.JANUARY
-    val isNewYear = (month == Calendar.DECEMBER && day == 31) || (month == Calendar.JANUARY && day == 1)
-    val isChristmas = month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26)
-
-    // Effect States
-    var showConfetti by remember { mutableStateOf(isNewYear) }
-    var showSnow by remember { mutableStateOf(isWinter) }
-    var showOrnaments by remember { mutableStateOf(isChristmas) }
+    val currentDate by produceState(LocalDate.now()) {
+        while (true) {
+            delay(60_000)
+            value = LocalDate.now()
+        }
+    }
+    val isWinter = currentDate.monthValue == 12 || currentDate.monthValue == 1
+    val isNewYear =
+        currentDate.monthValue == 12 && currentDate.dayOfMonth == 31 ||
+            currentDate.monthValue == 1 && currentDate.dayOfMonth == 1
+    val isChristmas =
+        currentDate.monthValue == 12 && currentDate.dayOfMonth in 24..26
 
     // Duration for the long press to trigger the reset
     val longPressDurationMillis = 650L // 0.65 seconds
@@ -131,17 +130,17 @@ fun ElevatedCardWithContent(
             CurvesOnTheCircle()
 
             // 1. Confetti (New Year) - Happens first
-            if (showConfetti) {
+            if (isNewYear) {
                 ConfettiEffect()
             }
 
             // 2. Snowflakes (December/New Year) - Happens after or during
-            if (showSnow) {
+            if (isWinter) {
                 SnowfallEffect()
             }
 
             // 3. Shiny Ornaments (Christmas/December - First 2 seconds)
-            if (showOrnaments) {
+            if (isChristmas) {
                 ChristmasOrnamentsEffect()
             }
 
