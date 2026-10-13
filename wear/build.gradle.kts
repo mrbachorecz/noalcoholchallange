@@ -14,8 +14,8 @@ android {
         applicationId = "com.mrbachorecz.noalcohol"
         minSdk = 30
         targetSdk = 36
-        versionCode = 1000023
-        versionName = "1.0.22"
+        versionCode = 1000024
+        versionName = "1.0.23"
     }
 
     signingConfigs {

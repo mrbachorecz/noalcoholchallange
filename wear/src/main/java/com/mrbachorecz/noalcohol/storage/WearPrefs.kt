@@ -3,8 +3,8 @@ package com.mrbachorecz.noalcohol.storage
 import android.content.Context
 import androidx.core.content.edit
 
-private const val PREFS_NAME = "wear_prefs"
-private const val STORED_DATE_KEY = "storedDate"
+internal const val PREFS_NAME = "wear_prefs"
+internal const val STORED_DATE_KEY = "storedDate"
 
 fun readLastDrinkingDate(context: Context): String {
     val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

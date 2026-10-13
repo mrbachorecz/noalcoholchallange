@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +45,15 @@ fun WearDatePickerDialog(
         initialNumberOfOptions = today.year - minYear + 1,
         initiallySelectedOption = start.year - minYear
     )
+
+    LaunchedEffect(dayState.selectedOption, monthState.selectedOption, yearState.selectedOption) {
+        val year = minYear + yearState.selectedOption
+        val month = monthState.selectedOption + 1
+        val maxDay = YearMonth.of(year, month).lengthOfMonth()
+        if (dayState.selectedOption + 1 > maxDay) {
+            dayState.scrollToOption(maxDay - 1)
+        }
+    }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(

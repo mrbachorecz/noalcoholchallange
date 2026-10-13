@@ -1,5 +1,6 @@
 package com.mrbachorecz.noalcohol
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.wear.compose.material.MaterialTheme
 import com.mrbachorecz.noalcohol.shared.DaysCalculator
+import com.mrbachorecz.noalcohol.storage.PREFS_NAME
+import com.mrbachorecz.noalcohol.storage.STORED_DATE_KEY
 import com.mrbachorecz.noalcohol.storage.readLastDrinkingDate
 import com.mrbachorecz.noalcohol.sync.WearSyncRequester
 import com.mrbachorecz.noalcohol.ui.DaysCircle
@@ -24,6 +27,25 @@ import com.mrbachorecz.noalcohol.ui.WearResetStreakScreen
 class MainActivity : ComponentActivity() {
 
     private var storedDateState by mutableStateOf("")
+    private val datePrefsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == STORED_DATE_KEY) {
+                runOnUiThread { storedDateState = readLastDrinkingDate(this) }
+            }
+        }
+
+    override fun onStart() {
+        super.onStart()
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+            .registerOnSharedPreferenceChangeListener(datePrefsListener)
+        storedDateState = readLastDrinkingDate(this)
+    }
+
+    override fun onStop() {
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+            .unregisterOnSharedPreferenceChangeListener(datePrefsListener)
+        super.onStop()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
